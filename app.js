@@ -86,6 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Navigation Engine
 function navigate(sectionId) {
+  // El Studio es una capa a pantalla completa sobre el Inicio
+  if (sectionId === 'studio') {
+    if (window.Studio) window.Studio.open();
+    sectionId = 'inicio';
+  }
   const sections = document.querySelectorAll('.content-section');
   sections.forEach(sec => sec.style.display = 'none');
 
@@ -93,8 +98,8 @@ function navigate(sectionId) {
   if (target) {
     target.style.display = 'block';
   } else {
-    document.getElementById('sec-animaciones').style.display = 'block';
-    sectionId = 'animaciones';
+    document.getElementById('sec-inicio').style.display = 'block';
+    sectionId = 'inicio';
   }
 
   // Update nav items
@@ -107,10 +112,10 @@ function navigate(sectionId) {
 
   // Update breadcrumb
   const nameMap = {
-    animaciones: 'Editor de Animaciones (Tipo Canva)',
+    inicio: 'Inicio',
     lifestyle: 'Universo Lifestyle & Estética',
     calendar: 'Parrilla de Contenido',
-    studio: 'Studio · Video promo y posts',
+    studio: 'Studio',
     scripts: 'Teleprompter & Guiones',
     concept: 'Propósito y Concepto',
     enemy: 'Enemigo Común',
@@ -124,12 +129,6 @@ function navigate(sectionId) {
     currentLabel.textContent = nameMap[sectionId];
   }
 
-  if (sectionId === 'studio') {
-    setTimeout(renderCanvas, 100);
-    if (typeof renderPromo === 'function') setTimeout(renderPromo, 100);
-  } else if (typeof togglePromoPlay === 'function' && !vRecording) {
-    togglePromoPlay(false);
-  }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
