@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCH·TECH | Brand System & Content Engine</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">Copiado al portapapeles</div>
+
+  <!-- MODAL: ADD POST TO CALENDAR -->
+  <div id="postModal" class="modal-overlay">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Nueva Publicación en Parrilla</h3>
+        <button class="modal-close" onclick="closeAddModal()">&times;</button>
+      </div>
+      <form id="addPostForm" onsubmit="handleAddPost(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Título del Video / Publicación:</label>
+            <input type="text" id="newPostTitle" placeholder="Ej. El error común al modelar tuberías..." required>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Formato:</label>
+              <select id="newPostFormat">
+                <option value="Reel">🎥 Reel / Video Corto</option>
+                <option value="Carrusel">📑 Carrusel (5 láminas)</option>
+                <option value="LinkedIn">💼 Post LinkedIn</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Pilar Temático:</label>
+              <select id="newPostPillar">
+                <option value="Enemigo Común / Disruptivo">Enemigo Común / Disruptivo</option>
+                <option value="Proceso & Técnica">Proceso & Demostración</option>
+                <option value="Autoridad & Casos">Autoridad & Casos Reales</option>
+                <option value="Visión de Futuro">Visión & Tendencias IA</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Fecha Estimada:</label>
+              <input type="date" id="newPostDate">
+            </div>
+            <div class="form-group">
+              <label>Gancho / Hook inicial:</label>
+              <input type="text" id="newPostHook" placeholder="Los primeros 3 segundos...">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeAddModal()">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar en Parrilla</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <!-- SIDEBAR (Wise.design inspired) -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="logo-mark">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 22 22 22 12 2"></polygon>
+              <line x1="12" y1="9" x2="12" y2="17"></line>
+            </svg>
+          </div>
+          <div class="brand-info">
+            <span class="brand-title">ARCH·TECH</span>
+            <span class="brand-badge">Brand System v1.0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-box">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Buscar tokens, guiones..." oninput="handleSearch(this.value)">
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <span class="section-label">VISIÓN GENERAL</span>
+          <a href="#overview" class="nav-item active" onclick="navigate('overview')">
+            <span class="nav-dot"></span> Resumen Ejecutivo
+          </a>
+          <a href="#calendar" class="nav-item" onclick="navigate('calendar')">
+            <span class="nav-dot"></span> 📅 Parrilla de Contenido
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <span class="section-label">1. EL CONCEPTO</span>
+          <a href="#concept" class="nav-item" onclick="navigate('concept')">
+            <span class="nav-dot"></span> Propósito y El "Por Qué"
+          </a>
+          <a href="#enemy" class="nav-item" onclick="navigate('enemy')">
+            <span class="nav-dot"></span> Enemigo Común
+          </a>
+          <a href="#audience" class="nav-item" onclick="navigate('audience')">
+            <span class="nav-dot"></span> Cliente Ideal (B2B)
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <span class="section-label">2. FUNDACIONES VISUALES</span>
+          <a href="#colors" class="nav-item" onclick="navigate('colors')">
+            <span class="nav-dot"></span> Colores & Tokens
+          </a>
+          <a href="#typography" class="nav-item" onclick="navigate('typography')">
+            <span class="nav-dot"></span> Tipografía & Jerarquías
+          </a>
+          <a href="#logo" class="nav-item" onclick="navigate('logo')">
+            <span class="nav-dot"></span> Monograma & Retícula
+          </a>
+          <a href="#photography" class="nav-item" onclick="navigate('photography')">
+            <span class="nav-dot"></span> Fotografía & Encuadres
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <span class="section-label">3. SISTEMA VERBAL & CONTENIDO</span>
+          <a href="#tone" class="nav-item" onclick="navigate('tone')">
+            <span class="nav-dot"></span> Voz, Tono & Reglas
+          </a>
+          <a href="#scripts" class="nav-item" onclick="navigate('scripts')">
+            <span class="nav-dot"></span> Teleprompter / Guiones
+          </a>
+          <a href="#carousel" class="nav-item" onclick="navigate('carousel')">
+            <span class="nav-dot"></span> Generador de Carruseles
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <span class="section-label">4. ADQUISICIÓN B2B</span>
+          <a href="#outreach" class="nav-item" onclick="navigate('outreach')">
+            <span class="nav-dot"></span> Plantillas de Outreach
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="profile-card">
+          <div class="avatar-ring">AR</div>
+          <div class="profile-meta">
+            <strong>Arquitectura & Tech</strong>
+            <span>Posicionamiento Premium</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      <!-- HEADER BAR -->
+      <header class="top-bar">
+        <div class="breadcrumbs">
+          <span>Sistema de Marca</span>
+          <span class="bc-sep">/</span>
+          <span id="currentSectionName" class="bc-current">Resumen Ejecutivo</span>
+        </div>
+        <div class="header-actions">
+          <button class="btn-accent" onclick="openAddModal()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            + Nueva Idea en Parrilla
+          </button>
+          <button class="btn-secondary" onclick="window.print()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <path d="M6 14h12v8H6z"></path>
+            </svg>
+            Imprimir
+          </button>
+        </div>
+      </header>
+
+      <div class="content-body">
+        
+        <!-- SECTION: OVERVIEW -->
+        <section id="sec-overview" class="content-section">
+          <div class="hero-banner">
+            <div class="hero-tag">SISTEMA CENTRALIZADO DE MARCA PERSONAL</div>
+            <h1 class="hero-title">El Ecosistema Visual, Verbal y Estratégico para tu Marca</h1>
+            <p class="hero-subtitle">Inspirado en la arquitectura digital de <em>wise.design</em>. Unifica el concepto, la forma y la percepción para posicionarte como socia tecnológica de firmas y constructoras.</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-number">3</span>
+              <span class="stat-label">Pilares Metodológicos</span>
+              <span class="stat-desc">Concepto, Forma y Percepción</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">B2B</span>
+              <span class="stat-label">Modelo de Monetización</span>
+              <span class="stat-desc">Estudios, Desarrolladoras y Constructoras</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">4</span>
+              <span class="stat-label">Tokens Cromáticos</span>
+              <span class="stat-desc">Contraste industrial con acento digital</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">5 seg</span>
+              <span class="stat-label">Ventana de Percepción</span>
+              <span class="stat-desc">Para calificar con estándar premium</span>
+            </div>
+          </div>
+
+          <!-- THE 6 PILLARS INTERACTIVE WHEEL -->
+          <div class="card p-6 mt-6">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Matriz de Conexión: Los 6 Pilares</h3>
+                <p class="card-sub">Haz clic en cada componente para saltar a su directriz técnica</p>
+              </div>
+            </div>
+            <div class="pillars-map">
+              <div class="pillar-pill" onclick="navigate('logo')">
+                <span class="pill-dot"></span> Logo & Monograma
+              </div>
+              <div class="pillar-pill" onclick="navigate('colors')">
+                <span class="pill-dot"></span> Colores & Tokens
+              </div>
+              <div class="pillar-pill" onclick="navigate('typography')">
+                <span class="pill-dot"></span> Tipografía
+              </div>
+              <div class="pillar-center">
+                <div class="pillar-core">
+                  <span>TU MARCA</span>
+                  <small>Arquitectura + Tech</small>
+                </div>
+              </div>
+              <div class="pillar-pill" onclick="navigate('tone')">
+                <span class="pill-dot"></span> Tono & Voz
+              </div>
+              <div class="pillar-pill" onclick="navigate('photography')">
+                <span class="pill-dot"></span> Fotografía
+              </div>
+              <div class="pillar-pill" onclick="navigate('calendar')">
+                <span class="pill-dot"></span> Parrilla de Contenido
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: CONTENT CALENDAR (PARRILLA DE CONTENIDO) -->
+        <section id="sec-calendar" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Gestión & Lanzamiento</span>
+            <h2>Parrilla de Contenido Interactiva</h2>
+            <p>Controla todas tus publicaciones, guiones, estados de grabación y fechas desde un único lugar.</p>
+          </div>
+
+          <div class="content-toolbar">
+            <div class="filter-pills">
+              <button class="filter-btn active" onclick="filterContent('all', this)">Todos</button>
+              <button class="filter-btn" onclick="filterContent('Reel', this)">Reels / Videos</button>
+              <button class="filter-btn" onclick="filterContent('Carrusel', this)">Carruseles</button>
+              <button class="filter-btn" onclick="filterContent('LinkedIn', this)">LinkedIn</button>
+            </div>
+            <button class="btn-primary" onclick="openAddModal()">+ Agregar Publicación</button>
+          </div>
+
+          <div class="content-table-card">
+            <table class="content-table">
+              <thead>
+                <tr>
+                  <th>Publicación & Hook</th>
+                  <th>Formato</th>
+                  <th>Pilar Temático</th>
+                  <th>Fecha</th>
+                  <th>Estado del Flujo</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody id="contentTableBody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- SECTION: CONCEPT & WHY -->
+        <section id="sec-concept" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Pilar 1: Concepto</span>
+            <h2>El Norte y Tu Propuesta de Valor</h2>
+            <p>Por qué existe tu marca y cuál es la bandera que defiendes frente al mercado.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <h3 class="card-title text-accent">La Verdad Central</h3>
+              <p class="mt-4 text-lead">"La arquitectura del futuro no se dibuja a mano esperando que encaje; se proyecta con precisión y simulación digital para eliminar errores y cerrar contratos con solvencia."</p>
+              <div class="badge-list mt-6">
+                <span class="badge">Precisión Milimétrica</span>
+                <span class="badge">Simulación BIM</span>
+                <span class="badge">Visualización Inmersiva</span>
+                <span class="badge">Arquitectura de Inversión</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Ingeniería Inversa de Posicionamiento</h3>
+              <div class="timeline mt-4">
+                <div class="timeline-step">
+                  <strong>Meta SMART:</strong> Cerrar contratos de consultoría y visualización de $3,000 - $8,000 USD por proyecto.
+                </div>
+                <div class="timeline-step">
+                  <strong>¿Por qué ser reconocida?:</strong> Como la arquitecta que previene colisiones costosas y eleva la tasa de venta de inmuebles.
+                </div>
+                <div class="timeline-step">
+                  <strong>¿Qué comunicar?:</strong> Demostraciones técnicas de planos 2D caóticos corregidos con tecnología 3D/BIM.
+                </div>
+                <div class="timeline-step">
+                  <strong>Acción innegociable:</strong> 2 publicaciones técnicas semanales + 5 contactos directos a directores de firmas.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: ENEMY -->
+        <section id="sec-enemy" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Polarización Estratégica</span>
+            <h2>El Enemigo Común & Creencias Contrarias</h2>
+            <p>La postura pública que te separa del 95% de los arquitectos convencionales.</p>
+          </div>
+
+          <div class="comparison-grid">
+            <div class="comparison-card enemy-card">
+              <div class="card-badge bg-red">EL ENEMIGO COMÚN</div>
+              <h3>La Arquitectura Tradicional Estancada</h3>
+              <ul class="styled-list cross-list">
+                <li>Resistencia absurda a adoptar software y flujos digitales modernos.</li>
+                <li>Diseño en silos desconectados que genera choques entre vigas e instalaciones.</li>
+                <li>Renders planos y deslucidos que ahuyentan a inversores de alto capital.</li>
+                <li>Sobrecostes promedio del 15% al 30% en obra asumidos como "normales".</li>
+              </ul>
+            </div>
+
+            <div class="comparison-card ally-card">
+              <div class="card-badge bg-blue">TU POSTURA DE VANGUARDIA</div>
+              <h3>Arquitectura & Simulación Tecnológica</h3>
+              <ul class="styled-list check-list">
+                <li>Integración temprana de herramientas 3D inteligentes e IA aplicada.</li>
+                <li>Detección preventiva de interferencias antes de poner un solo ladrillo.</li>
+                <li>Experiencias inmersivas hiperrealistas que cierran preventas en tiempo récord.</li>
+                <li>Ahorro cuantificable de miles de dólares en demoliciones y retrabajos.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: AUDIENCE -->
+        <section id="sec-audience" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Monetización B2B</span>
+            <h2>Tu Cliente Ideal & Matriz de Servicios</h2>
+            <p>A quién le vendes y cómo empaquetas tu valor para cobrar honorarios altos.</p>
+          </div>
+
+          <div class="grid-3">
+            <div class="service-box">
+              <div class="service-header">
+                <span class="tier-tag">TIER 1</span>
+                <h3>ArchViz de Inversión</h3>
+                <p class="service-price">Para Preventas y Concursos</p>
+              </div>
+              <p class="service-desc">Imágenes y recorridos inmersivos ultra-realistas que hacen que los compradores e inversionistas firmen antes de iniciar obra.</p>
+              <ul class="service-deliverables">
+                <li>Renders cinemáticos en 4K</li>
+                <li>Iluminación fotométrica precisa</li>
+                <li>Recorridos de video en 60fps</li>
+              </ul>
+            </div>
+
+            <div class="service-box featured-service">
+              <div class="service-header">
+                <span class="tier-tag accent-tag">TIER 2 (CORE)</span>
+                <h3>Auditoría & Coordinación BIM</h3>
+                <p class="service-price">Ahorro y Prevención</p>
+              </div>
+              <p class="service-desc">Revisión y modelado digital para firmas con proyectos en curso. Detección automática de colisiones técnicas entre especialidades.</p>
+              <ul class="service-deliverables">
+                <li>Detección de interferencias (Clash Detection)</li>
+                <li>Optimización de cuantías y geometrías</li>
+                <li>Reporte ejecutivo para ingenieros y contratistas</li>
+              </ul>
+            </div>
+
+            <div class="service-box">
+              <div class="service-header">
+                <span class="tier-tag">TIER 3</span>
+                <h3>Consultoría de Flujos Digitales</h3>
+                <p class="service-price">Implementación Interna</p>
+              </div>
+              <p class="service-desc">Acompañamiento a despachos para modernizar su metodología de trabajo e integrar flujos con IA y software paramétrico.</p>
+              <ul class="service-deliverables">
+                <li>Diagnóstico de cuellos de botella</li>
+                <li>Estandarización de plantillas</li>
+                <li>Capacitación de equipos clave</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: COLORS -->
+        <section id="sec-colors" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Fundación Visual</span>
+            <h2>Paleta de Color & Design Tokens</h2>
+            <p>Haz clic en cualquier muestra para copiar su código HEX o variable CSS de inmediato.</p>
+          </div>
+
+          <div class="colors-grid">
+            <div class="color-card" onclick="copyToken('#111215')">
+              <div class="swatch" style="background: #111215; border: 1px solid #2a2d34;"></div>
+              <div class="color-details">
+                <div class="color-name">Negro Obsidiana</div>
+                <div class="color-role">Fondo Principal / Canvas</div>
+                <div class="token-code">#111215 <span>Copiar</span></div>
+              </div>
+            </div>
+
+            <div class="color-card" onclick="copyToken('#2A2D34')">
+              <div class="swatch" style="background: #2A2D34;"></div>
+              <div class="color-details">
+                <div class="color-name">Hormigón Grafito</div>
+                <div class="color-role">Superficies, Cards y Bordes</div>
+                <div class="token-code">#2A2D34 <span>Copiar</span></div>
+              </div>
+            </div>
+
+            <div class="color-card" onclick="copyToken('#0066FF')">
+              <div class="swatch" style="background: #0066FF;"></div>
+              <div class="color-details">
+                <div class="color-name">Azul Cibernético</div>
+                <div class="color-role">Acento Tecnológico / CTA</div>
+                <div class="token-code">#0066FF <span>Copiar</span></div>
+              </div>
+            </div>
+
+            <div class="color-card" onclick="copyToken('#F8F9FA')">
+              <div class="swatch" style="background: #F8F9FA;"></div>
+              <div class="color-details">
+                <div class="color-name">Blanco Estructural</div>
+                <div class="color-role">Tipografía de Título / Máximo Contraste</div>
+                <div class="token-code">#F8F9FA <span>Copiar</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-6">
+            <h3 class="card-title">Variables CSS de Marca (Ready to paste)</h3>
+            <pre class="code-block"><code>:root {
+  --color-canvas: #111215;       /* Fondo oscuro sobrio */
+  --color-surface: #2a2d34;      /* Paneles y tarjetas */
+  --color-accent: #0066ff;       /* Innovación digital */
+  --color-text-main: #f8f9fa;    /* Títulos nítidos */
+  --color-text-muted: #9aa0a6;   /* Descripciones y subtítulos */
+  --radius-card: 16px;           /* Curvatura estilo Wise Design */
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- SECTION: TYPOGRAPHY -->
+        <section id="sec-typography" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Fundación Tipográfica</span>
+            <h2>Tipografías Oficiales & Escalas</h2>
+            <p>Estructura de fuentes gratuitas con licencia Google Fonts listas para web, Figma y Canva.</p>
+          </div>
+
+          <div class="type-specimen-grid">
+            <div class="card">
+              <div class="type-header">
+                <span class="type-tag">TÍTULOS Y CABECERAS</span>
+                <h3>Space Grotesk</h3>
+                <p class="type-desc">Tipografía proporcional geométrica basada en principios de ingeniería y computación.</p>
+                <a href="https://fonts.google.com/specimen/Space+Grotesk" target="_blank" class="text-link">Ver en Google Fonts ↗</a>
+              </div>
+              <div class="specimen-box font-space">
+                <div class="specimen-line size-h1">Arquitectura que se adelanta a la obra.</div>
+                <div class="specimen-line size-h2">Simulación Digital & Modelado de Alta Precisión.</div>
+                <div class="specimen-line size-h3">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="type-header">
+                <span class="type-tag">CUERPO Y LECTURA</span>
+                <h3>Plus Jakarta Sans</h3>
+                <p class="type-desc">Geometría limpia inspirada en el modernismo industrial, con legibilidad perfecta en móviles.</p>
+                <a href="https://fonts.google.com/specimen/Plus+Jakarta+Sans" target="_blank" class="text-link">Ver en Google Fonts ↗</a>
+              </div>
+              <div class="specimen-box font-jakarta">
+                <p class="specimen-p">El 80% de los sobrecostes en construcción no se originan en el terreno, sino en la fase de proyección cuando los planos tradicionales en dos dimensiones no son capaces de predecir las interferencias mecánicas.</p>
+                <p class="specimen-p mt-2 text-muted">A B C D E F G H I J K L M N Ñ O P Q R S T U V W X Y Z</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: LOGO & MONOGRAM -->
+        <section id="sec-logo" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Identidad Gráfica</span>
+            <h2>Concepto de Monograma & Retícula</h2>
+            <p>Un símbolo que funciona tanto en la foto de perfil de 40px como en la portada de un dossier técnico.</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="card flex-center p-8">
+              <div class="logo-preview-box">
+                <div class="logo-svg-container">
+                  <svg width="120" height="120" viewBox="0 0 100 100" fill="none">
+                    <rect x="5" y="5" width="90" height="90" rx="18" stroke="#2A2D34" stroke-width="2" />
+                    <path d="M50 20 L80 38 L80 72 L50 90 L20 72 L20 38 Z" stroke="#0066FF" stroke-width="3" />
+                    <line x1="50" y1="20" x2="50" y2="90" stroke="#0066FF" stroke-width="2" stroke-dasharray="4 4" />
+                    <line x1="20" y1="38" x2="80" y2="72" stroke="#F8F9FA" stroke-width="2" />
+                    <line x1="80" y1="38" x2="20" y2="72" stroke="#F8F9FA" stroke-width="2" />
+                  </svg>
+                </div>
+                <div class="logo-caption mt-4">
+                  <strong>ISOTIPO GEOMÉTRICO "PRISMA BIM"</strong>
+                  <span>Estructura isométrica vectorial de alta precisión</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Reglas de Uso del Logo</h3>
+              <div class="rules-list mt-4">
+                <div class="rule-item">
+                  <div class="rule-icon ok">✓</div>
+                  <div>
+                    <strong>Fondo Oscuro:</strong> Usar siempre sobre `#111215` o superficies `#2A2D34` para preservar el brillo del azul cibernético.
+                  </div>
+                </div>
+                <div class="rule-item">
+                  <div class="rule-icon ok">✓</div>
+                  <div>
+                    <strong>Área de Protección:</strong> Mantener una distancia mínima equivalente al 20% del ancho del logotipo alrededor del marco.
+                  </div>
+                </div>
+                <div class="rule-item">
+                  <div class="rule-icon bad">✕</div>
+                  <div>
+                    <strong>Evitar Deformaciones:</strong> No añadir sombras 3D infantiles ni cambiar las proporciones geométricas.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: PHOTOGRAPHY -->
+        <section id="sec-photography" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Dirección de Arte</span>
+            <h2>Fotografía, Iluminación & B-Roll</h2>
+            <p>La estética visual que proyecta competencia técnica y sofisticación sin parecer forzada.</p>
+          </div>
+
+          <div class="grid-3">
+            <div class="card art-card">
+              <div class="art-badge">PLANO 1</div>
+              <h4>Retrato de Autoridad</h4>
+              <p class="text-sm mt-2">Plano medio a la altura de los ojos. Vestimenta sobria monocromática (negro, grafito o blanco). Mirada firme a lente. Fondo difuminado con arquitectura limpia o estudio de diseño.</p>
+            </div>
+            <div class="card art-card">
+              <div class="art-badge">PLANO 2 (B-ROLL)</div>
+              <h4>Interacción Tecnológica</h4>
+              <p class="text-sm mt-2">Planos cerrados de tus manos interactuando con software 3D, rotando mallas poligonales, trazando con stylus en iPad o analizando planos con capas técnicas.</p>
+            </div>
+            <div class="card art-card">
+              <div class="art-badge">PLANO 3 (ESPACIAL)</div>
+              <h4>Arquitectura en Contexto</h4>
+              <p class="text-sm mt-2">Tomas abiertas caminando junto a estructuras de concreto aparente, cristaleras, fachadas geométricas o espacios de obra limpia. Luz natural neutra.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: TONE -->
+        <section id="sec-tone" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Sistema Verbal</span>
+            <h2>Voz, Tono & Guía de Comunicación</h2>
+            <p>El estándar de redacción para proyectar seguridad, rigor analítico y cero humo.</p>
+          </div>
+
+          <div class="card">
+            <div class="grid-2">
+              <div>
+                <h4 class="text-accent">Así hablamos:</h4>
+                <ul class="styled-list check-list mt-3">
+                  <li><strong>Técnicos pero comprensibles:</strong> Hablamos de colisiones, flujos y costos, traduciendo la jerga a beneficios tangibles.</li>
+                  <li><strong>Seguros y directos:</strong> Frases asertivas. No dudamos ni usamos rodeos vacíos.</li>
+                  <li><strong>Enfocados en el negocio:</strong> Mostramos cómo el diseño de vanguardia genera plusvalía y ventas.</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="text-red">Lo que nunca decimos:</h4>
+                <ul class="styled-list cross-list mt-3">
+                  <li>Frases cliché de gurú como *"Sigue tus sueños y todo fluirá"*.</li>
+                  <li>Saturación de emojis en cada renglón de un post.</li>
+                  <li>Victimismo o quejas sin proponer una solución técnica y medible.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: SCRIPTS & TELEPROMPTER -->
+        <section id="sec-scripts" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Estudio de Grabación</span>
+            <h2>Teleprompter Interactivo: Video 1 (60s)</h2>
+            <p>Usa este prompter para practicar tus tomas con control de tiempo y B-roll incorporado.</p>
+          </div>
+
+          <div class="prompter-card">
+            <div class="prompter-controls">
+              <div class="prompter-status">
+                <span class="rec-dot"></span>
+                <span>MODO TELEPROMPTER • 58s ESTIMADOS</span>
+              </div>
+              <button class="btn-copy" onclick="copyText('full-script-text')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copiar Todo el Guion
+              </button>
+            </div>
+
+            <div class="script-timeline" id="full-script-text">
+              <div class="script-block">
+                <div class="time-marker">00:00 - 00:04</div>
+                <div class="block-content">
+                  <span class="shot-tag">PLANO A • A LA CÁMARA</span>
+                  <p class="dialogue">"El 80% de los sobrecostes en obra no son por culpa de los materiales ni de los albañiles. Ocurren meses antes, frente a una pantalla."</p>
+                </div>
+              </div>
+
+              <div class="script-block">
+                <div class="time-marker">00:04 - 00:16</div>
+                <div class="block-content">
+                  <span class="shot-tag broll-tag">B-ROLL • PLANOS 2D VS MODELO 3D</span>
+                  <p class="dialogue">"La mayoría de firmas siguen proyectando con métodos de hace 20 años: planos en dos dimensiones que no se hablan entre sí. Cuando las tuberías chocan con una viga en plena obra, ya es tarde: toca demoler y pagar miles de dólares."</p>
+                </div>
+              </div>
+
+              <div class="script-block">
+                <div class="time-marker">00:16 - 00:28</div>
+                <div class="block-content">
+                  <span class="shot-tag">PLANO A • AUTORIDAD ANALÍTICA</span>
+                  <p class="dialogue">"En la arquitectura tradicional hay un vacío tecnológico enorme. Muchos le temen a la innovación creyendo que el software le quita lo artístico al diseño. Es exactamente lo contrario."</p>
+                </div>
+              </div>
+
+              <div class="script-block">
+                <div class="time-marker">00:28 - 00:42</div>
+                <div class="block-content">
+                  <span class="shot-tag broll-tag">B-ROLL • RENDER CINEMÁTICO ROTANDO</span>
+                  <p class="dialogue">"La tecnología y la simulación digital no solo te permiten crear geometrías que antes eran imposibles de calcular; te permiten detectar cada colisión antes de poner un solo ladrillo, y presentar proyectos que los inversores compran sin dudar."</p>
+                </div>
+              </div>
+
+              <div class="script-block">
+                <div class="time-marker">00:42 - 00:58</div>
+                <div class="block-content">
+                  <span class="shot-tag">PLANO A • CIERRE & LLAMADO A LA ACCIÓN</span>
+                  <p class="dialogue">"Soy arquitecta y diseñadora, y ayudo a estudios y constructoras a blindar sus proyectos y cerrar ventas millonarias con tecnología de vanguardia. Si diriges una firma y quieres optimizar tu próximo desarrollo, envíame un mensaje privado con la palabra PROYECTO y analizamos tu caso."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: CAROUSEL BUILDER -->
+        <section id="sec-carousel" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Contenido Estratégico</span>
+            <h2>Simulador de Carrusel (5 Láminas)</h2>
+            <p>Estructura probada para generar guardados y mensajes directos de directores de estudios.</p>
+          </div>
+
+          <div class="carousel-preview-wrap">
+            <div class="carousel-nav-tabs">
+              <button class="c-tab active" onclick="switchSlide(1)">Slide 1 (Hook)</button>
+              <button class="c-tab" onclick="switchSlide(2)">Slide 2 (Problema)</button>
+              <button class="c-tab" onclick="switchSlide(3)">Slide 3 (Contraste)</button>
+              <button class="c-tab" onclick="switchSlide(4)">Slide 4 (Solución)</button>
+              <button class="c-tab" onclick="switchSlide(5)">Slide 5 (CTA)</button>
+            </div>
+
+            <div class="slide-canvas" id="slideCanvas">
+              <div class="slide-content" id="slide1">
+                <span class="slide-number">01 / 05</span>
+                <span class="slide-category">ARQUITECTURA & TECNOLOGÍA</span>
+                <h2 class="slide-headline">Por qué los mejores estudios dejaron de usar planos 2D para coordinar obra.</h2>
+                <div class="slide-graphic">
+                  <div class="isometric-wire"></div>
+                </div>
+                <div class="slide-footer">
+                  <span>Desliza para ver la comparativa →</span>
+                </div>
+              </div>
+
+              <div class="slide-content" id="slide2" style="display:none;">
+                <span class="slide-number">02 / 05</span>
+                <span class="slide-category">EL ERROR SILENCIOSO</span>
+                <h3 class="slide-headline">El costo de la descoordinación tradicional:</h3>
+                <p class="slide-text">Cuando las especialidades (estructura, hidrosanitaria y eléctrica) se dibujan en planos planos independientes, las colisiones solo se descubren cuando el concreto ya fraguó.</p>
+                <div class="metric-callout">
+                  <strong>+18% en sobrecostos</strong> evitables en cada proyecto.
+                </div>
+              </div>
+
+              <div class="slide-content" id="slide3" style="display:none;">
+                <span class="slide-number">03 / 05</span>
+                <span class="slide-category">EL CONTRASTE</span>
+                <div class="slide-vs-grid">
+                  <div class="vs-col old">
+                    <strong>Método Antiguo</strong>
+                    <ul>
+                      <li>Planos en papel o PDF</li>
+                      <li>Detección tardía en obra</li>
+                      <li>Demoliciones y demoras</li>
+                    </ul>
+                  </div>
+                  <div class="vs-col new">
+                    <strong>Coordinación Digital</strong>
+                    <ul>
+                      <li>Gemelo digital 3D/BIM</li>
+                      <li>Clash detection en minutos</li>
+                      <li>Cero sorpresas en terreno</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slide-content" id="slide4" style="display:none;">
+                <span class="slide-number">04 / 05</span>
+                <span class="slide-category">EL BENEFICIO COMERCIAL</span>
+                <h3 class="slide-headline">No es solo técnica: es velocidad de venta.</h3>
+                <p class="slide-text">Las constructoras que integran visualización hiperrealista antes de obra cierran sus preventas un 40% más rápido, entregándole a los clientes una visión certera de su inversión.</p>
+              </div>
+
+              <div class="slide-content" id="slide5" style="display:none;">
+                <span class="slide-number">05 / 05</span>
+                <span class="slide-category">PRÓXIMO PASO</span>
+                <h2 class="slide-headline">¿Diriges un estudio o constructora?</h2>
+                <p class="slide-text">Ayudamos a firmas a optimizar sus presentaciones y coordinar proyectos con tecnología de vanguardia.</p>
+                <div class="cta-pill mt-4">
+                  Escribe "PROYECTO" por mensaje directo
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION: OUTREACH -->
+        <section id="sec-outreach" class="content-section" style="display:none;">
+          <div class="section-header">
+            <span class="kicker">Adquisición B2B</span>
+            <h2>Plantillas de Prospección Directa (Outreach)</h2>
+            <p>Genera mensajes personalizados para directores de estudios en LinkedIn e Instagram.</p>
+          </div>
+
+          <div class="generator-box card">
+            <div class="grid-2">
+              <div class="input-group">
+                <label>Nombre del Prospecto:</label>
+                <input type="text" id="leadName" value="Arq. Fernando" oninput="updateOutreach()">
+              </div>
+              <div class="input-group">
+                <label>Nombre del Estudio o Firma:</label>
+                <input type="text" id="firmName" value="Estudio Diagonal" oninput="updateOutreach()">
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2 mt-6">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h4 class="card-title">Opción A: LinkedIn (Profesional / Consultivo)</h4>
+                  <p class="card-sub">Para fundadores, directores técnicos y gerentes de proyecto</p>
+                </div>
+                <button class="btn-copy" onclick="copyText('linkedin-template-text')">Copiar</button>
+              </div>
+              <div class="template-body" id="linkedin-template-text">
+Hola <span class="lead-var">[Nombre]</span>, un gusto saludarte. Veo que en <span class="firm-var">[Estudio]</span> están desarrollando proyectos con una arquitectura muy sólida y cuidada.
+
+Te escribo brevemente: soy arquitecta especializada en tecnología de diseño y visualización inmersiva. Colaboro con firmas en la coordinación digital de proyectos para eliminar errores técnicos antes de obra y acelerar el cierre comercial con inversores.
+
+Tengo un documento visual de 2 minutos donde desgloso cómo optimizamos los tiempos de iteración en proyectos de esta escala. ¿Te gustaría que te lo comparta por aquí sin compromiso alguno?
+
+Un saludo cordial.
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h4 class="card-title">Opción B: Instagram DM (Visual & Ágil)</h4>
+                  <p class="card-sub">Para cuentas activas de estudios de diseño y arquitectos líderes</p>
+                </div>
+                <button class="btn-copy" onclick="copyText('ig-template-text')">Copiar</button>
+              </div>
+              <div class="template-body" id="ig-template-text">
+Hola <span class="lead-var">[Nombre]</span>! Sigo muy de cerca el trabajo de <span class="firm-var">[Estudio]</span>, en especial los últimos proyectos que han publicado.
+
+Soy arquitecta y diseñadora enfocada en tecnología y ArchViz de alto impacto. Me encantaría compartirles un ejemplo puntual de cómo potenciamos las presentaciones de venta para proyectos de este calibre.
+
+¿A qué correo o por qué medio les resulta más cómodo que se los haga llegar? Un saludo!
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
