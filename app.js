@@ -1,4 +1,4 @@
-// ALEJANDRA TORRES | BRAND & CREATIVE ENGINE
+// ARCH·TECH STUDIO | BRAND & CREATIVE ENGINE
 
 // Default Initial Content Calendar Data (Architecture, Tech & Lifestyle)
 const DEFAULT_POSTS = [
@@ -60,7 +60,7 @@ const DEFAULT_POSTS = [
 ];
 
 // State Management
-let posts = JSON.parse(localStorage.getItem('aleja_brand_posts')) || DEFAULT_POSTS;
+let posts = JSON.parse(localStorage.getItem('arch_tech_posts_v2')) || DEFAULT_POSTS;
 let activeFilter = 'all';
 
 // Canva Studio State
@@ -124,7 +124,6 @@ function navigate(sectionId) {
     currentLabel.textContent = nameMap[sectionId];
   }
 
-  // Re-render canvas if switching to studio
   if (sectionId === 'studio') {
     setTimeout(renderCanvas, 100);
   }
@@ -225,7 +224,7 @@ function loadTemplate(tplName) {
   if (tplName === 'lifestyle') {
     canvasConfig.bg = '#0e1014';
     canvasConfig.accent = '#E5A962';
-    if (kicker) kicker.value = "ALEJANDRA TORRES • ARCHITECTURAL LIFESTYLE";
+    if (kicker) kicker.value = "ARCH·TECH • ARCHITECTURAL LIFESTYLE";
     if (title) title.value = "The Architecture of Living Well: 3 Reglas de Oro.";
     if (sub) sub.value = "El verdadero lujo no es recargar los espacios; es dominar la luz natural, la acústica y la nobleza de los materiales.";
     if (cta) cta.value = "Desliza para ver la guía completa →";
@@ -314,7 +313,6 @@ function renderCanvas() {
   if (canvasConfig.uploadedImage) {
     ctx.save();
     ctx.globalAlpha = 0.45;
-    // Cover fill in center
     const img = canvasConfig.uploadedImage;
     const scale = Math.max(width / img.width, height / img.height);
     const x = (width / 2) - (img.width / 2) * scale;
@@ -329,7 +327,7 @@ function renderCanvas() {
   ctx.strokeRect(40, 40, width - 80, height - 80);
 
   // Kicker Tag
-  const kicker = document.getElementById('canvasKicker')?.value || 'ALEJANDRA TORRES';
+  const kicker = document.getElementById('canvasKicker')?.value || 'ARCH·TECH STUDIO';
   ctx.font = '700 24px "Space Grotesk", sans-serif';
   ctx.fillStyle = canvasConfig.accent;
   ctx.letterSpacing = '3px';
@@ -346,7 +344,7 @@ function renderCanvas() {
   ctx.letterSpacing = '-1px';
   wrapText(ctx, title, 90, 260, width - 180, 78);
 
-  // Graphic Element (Isometric Wireframe or Accent Box)
+  // Graphic Element
   const graphicType = document.getElementById('canvasGraphic')?.value || 'prism';
   if (graphicType === 'prism') {
     ctx.save();
@@ -401,7 +399,7 @@ function renderCanvas() {
   ctx.textAlign = 'left';
 
   // Bottom Author Watermark
-  const author = document.getElementById('canvasAuthor')?.value || '@alejandratorres';
+  const author = document.getElementById('canvasAuthor')?.value || '@tu_marca';
   ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
   ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
   ctx.fillText(author, 90, 1260);
@@ -445,7 +443,7 @@ function downloadCanvasImage() {
   if (!canvas) return;
 
   const link = document.createElement('a');
-  link.download = `alejandra-torres-post-${Date.now()}.png`;
+  link.download = `arch-lifestyle-post-${Date.now()}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
   showToast('¡Imagen PNG (1080x1350) descargada con éxito!');
@@ -568,7 +566,7 @@ function handleAddPost(event) {
 }
 
 function savePosts() {
-  localStorage.setItem('aleja_brand_posts', JSON.stringify(posts));
+  localStorage.setItem('arch_tech_posts_v2', JSON.stringify(posts));
 }
 
 // Toast
