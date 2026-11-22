@@ -59,7 +59,14 @@ const ICONS = {
   grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
   dup: '<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/>',
   image: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-8 8"/>',
-  home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'
+  home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  video: '<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3z"/>',
+  music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  cc: '<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 10.5a2.5 2.5 0 1 0 0 3M17 10.5a2.5 2.5 0 1 0 0 3"/>',
+  trans: '<path d="M4 7h11l-3-3M20 17H9l3 3"/>',
+  volume: '<path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>',
+  mute: '<path d="M11 5L6 9H2v6h4l5 4z"/><path d="M22 9l-6 6M16 9l6 6"/>',
+  scissors: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/>'
 };
 const icon = (n, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[n] || ''}</svg>`;
 
@@ -182,6 +189,7 @@ const base = (o) => ({ id: uid(), x: 0, y: 0, w: 400, h: 400, rot: 0, op: 1, loc
 const T = (text, o = {}) => base({ type: 'text', text, font: '$body', size: 48, weight: 400, italic: false, upper: false, color: '$1', align: 'left', lh: 1.25, ls: 0, h: 0, ...o, anim: { type: 'rise', delay: 0, dur: 0.8, ...(o.anim || {}) } });
 const S = (shape, o = {}) => base({ type: 'shape', shape, fill: '$2', stroke: '', sw: 0, radius: 0, ...o, anim: { type: 'fade', delay: 0, dur: 0.8, ...(o.anim || {}) } });
 const IMG = (o = {}) => base({ type: 'image', src: null, mask: 'rect', radius: 0, ...o, anim: { type: 'fade', delay: 0, dur: 1, ...(o.anim || {}) } });
+const VID = (o = {}) => base({ type: 'video', src: null, mask: 'rect', radius: 0, start: 0, vol: 1, muted: false, ...o, anim: { type: 'fade', delay: 0, dur: 0.5, ...(o.anim || {}) } });
 const LOGO = (o = {}) => base({ type: 'logo', style: 'ring', color: '$2', ...o, anim: { type: 'pop', delay: 0, dur: 0.9, ...(o.anim || {}) } });
 const PAGE = (els, o = {}) => ({ id: uid(), dur: 4, bg: { type: 'solid', c1: '$0', c2: '$3', angle: 160, img: null, tint: 0.45 }, glow: { on: true, color: '$2', x: 0.5, y: 0.08, size: 0.75, a: 0.22 }, grain: true, grid: 'none', els, ...o });
 
@@ -196,6 +204,28 @@ function newDesign(fmt = 'story', name = 'Diseño sin título') {
 const kicker = (text, o = {}) => T(text, { size: 26, weight: 600, upper: true, ls: 7, color: '$2', align: 'center', ...o });
 
 const TEMPLATES = [
+  {
+    id: 'reel', name: 'Reel con tu video', fmt: 'story', badge: 'Video · subtítulos',
+    build() {
+      const d = newDesign('story', 'Reel con tu video');
+      d.capStyle = { preset: 'resaltado', y: 0.7 };
+      d.pages = [
+        PAGE([
+          VID({ x: 0, y: 0, w: 1080, h: 1920, anim: { type: 'none', delay: 0, dur: 0.5 } }),
+          S('rect', { x: 0, y: 0, w: 1080, h: 520, fill: '$0', op: 0.35, anim: { type: 'none', delay: 0, dur: 0.5 } }),
+          kicker(brand.tagline, { x: 90, y: 200, w: 900, anim: { type: 'fade', delay: 0.2, dur: 0.6 } }),
+          T('Un día en obra conmigo', { font: '$head', size: 96, weight: 500, align: 'center', x: 90, y: 260, w: 900, lh: 1.02, anim: { type: 'type', delay: 0.5, dur: 1.3 } })
+        ], { dur: 6, glow: { on: false, color: '$2', x: 0.5, y: 0, size: 0.7, a: 0.2 }, grain: false,
+          caps: [{ a: 0.4, b: 1.8, text: 'Así se ve tu video' }, { a: 1.8, b: 3.4, text: 'con subtítulos automáticos' }, { a: 3.4, b: 5.6, text: 'y sonido de teclado' }] }),
+        PAGE([
+          LOGO({ x: 400, y: 560, w: 280, h: 280 }),
+          T(brand.name, { font: '$head', size: 88, weight: 500, align: 'center', x: 90, y: 940, w: 900, anim: { type: 'rise', delay: 0.4, dur: 0.9 } }),
+          T('Sígueme para más', { size: 38, color: '$2', align: 'center', x: 90, y: 1180, w: 900, anim: { type: 'pop', delay: 0.9, dur: 0.6 } })
+        ], { dur: 3.5, trans: { type: 'zoom', dur: 0.6 } })
+      ];
+      return d;
+    }
+  },
   {
     id: 'promo', name: 'Video promo de marca', fmt: 'story', badge: 'Video · 5 escenas',
     build() {
@@ -329,7 +359,7 @@ function getImg(src) {
   if (!src) return null;
   let data = src;
   if (src === 'brand:logo') data = brand.logo;
-  else if (src.startsWith('up:')) data = uploads.get(src.slice(3))?.data;
+  else if (src.startsWith('up:')) { const u = uploads.get(src.slice(3)); data = u ? (u.kind === 'video' ? u.thumb : u.data) : null; }
   if (!data) return null;
   let img = imgCache.get(data);
   if (!img) {
@@ -451,8 +481,10 @@ function grainPattern(ctx) {
 }
 
 function drawCover(ctx, img, x, y, w, h) {
-  const s = Math.max(w / img.naturalWidth, h / img.naturalHeight);
-  const iw = img.naturalWidth * s, ih = img.naturalHeight * s;
+  const nw = img.videoWidth || img.naturalWidth, nh = img.videoHeight || img.naturalHeight;
+  if (!nw || !nh) return;
+  const s = Math.max(w / nw, h / nh);
+  const iw = nw * s, ih = nh * s;
   ctx.drawImage(img, x + (w - iw) / 2, y + (h - ih) / 2, iw, ih);
 }
 
@@ -556,6 +588,7 @@ function drawEl(ctx, el, t, opts) {
   if (el.type === 'text') drawText(ctx, el, st);
   else if (el.type === 'shape') drawShape(ctx, el);
   else if (el.type === 'image') drawImageEl(ctx, el, opts);
+  else if (el.type === 'video') drawVideoEl(ctx, el, opts);
   else if (el.type === 'logo') drawLogo(ctx, el);
   ctx.restore();
 }
@@ -655,13 +688,47 @@ function drawPage(ctx, page, W, H, t, opts) {
   drawBg(ctx, page, W, H, t);
   for (const el of page.els) drawEl(ctx, el, t, opts);
   if (page.grain) drawGrain(ctx, W, H);
+  drawCaptions(ctx, page, W, H, t, opts);
 }
 
-// Línea de tiempo del diseño completo (las páginas se encadenan con fundido)
-const TR = 0.5;
+/* ------------------------------------------------------------------ */
+/* Transiciones entre páginas                                           */
+/* ------------------------------------------------------------------ */
+const TRANSITIONS = [
+  { id: 'cut', name: 'Corte' }, { id: 'fade', name: 'Fundido' }, { id: 'slide', name: 'Deslizar' },
+  { id: 'slideUp', name: 'Subir' }, { id: 'zoom', name: 'Zoom' }, { id: 'wipe', name: 'Barrido' },
+  { id: 'blur', name: 'Desenfoque' }, { id: 'circle', name: 'Círculo' }, { id: 'flash', name: 'Destello' }
+];
+const transOf = (p) => p.trans || { type: 'fade', dur: 0.5 };
+const trDur = (p) => { const t = transOf(p); return t.type === 'cut' ? 0 : Math.min(t.dur || 0.5, p.dur * 0.5); };
+function applyTransIn(ctx, type, p, W, H) {
+  switch (type) {
+    case 'fade': ctx.globalAlpha *= p; break;
+    case 'slide': ctx.translate((1 - p) * W, 0); break;
+    case 'slideUp': ctx.translate(0, (1 - p) * H); break;
+    case 'zoom': { ctx.globalAlpha *= p; const s = 1.25 - 0.25 * p; ctx.translate(W / 2, H / 2); ctx.scale(s, s); ctx.translate(-W / 2, -H / 2); break; }
+    case 'wipe': ctx.beginPath(); ctx.rect(0, 0, W * p, H); ctx.clip(); break;
+    case 'blur': ctx.globalAlpha *= p; ctx.filter = `blur(${(1 - p) * 28}px)`; break;
+    case 'circle': ctx.beginPath(); ctx.arc(W / 2, H / 2, Math.hypot(W, H) / 2 * p, 0, Math.PI * 2); ctx.clip(); break;
+    case 'flash': ctx.globalAlpha *= p < 0.5 ? 0 : 1; break;
+    default: break;
+  }
+}
+function applyTransOut(ctx, type, p, W, H) {
+  if (type === 'slide') ctx.translate(-p * W * 0.35, 0);
+  else if (type === 'slideUp') ctx.translate(0, -p * H * 0.3);
+  else if (type === 'zoom') { const s = 1 + 0.1 * p; ctx.translate(W / 2, H / 2); ctx.scale(s, s); ctx.translate(-W / 2, -H / 2); }
+}
+
+// Línea de tiempo: cada página empieza cuando arranca su transición de entrada
 function timeline(d) {
   let s = 0;
-  return d.pages.map((p, i) => { const w = { i, start: s, end: s + p.dur }; s += p.dur - TR; return w; });
+  return d.pages.map((p, i) => {
+    const w = { i, start: s, end: s + p.dur };
+    const nx = d.pages[i + 1];
+    s += p.dur - (nx ? trDur(nx) : 0);
+    return w;
+  });
 }
 function totalDur(d) { const tl = timeline(d); return tl.length ? tl[tl.length - 1].end : 0; }
 function drawAt(ctx, d, T) {
@@ -669,11 +736,27 @@ function drawAt(ctx, d, T) {
   let drew = false;
   tl.forEach((w) => {
     if (T < w.start || T > w.end) return;
+    const p = d.pages[w.i];
     const lt = T - w.start;
+    const td = w.i > 0 ? trDur(p) : 0;
+    const tr = transOf(p).type;
+    const pIn = td > 0 && lt < td ? easeInOut(lt / td) : 1;
     ctx.save();
-    ctx.globalAlpha = w.i === 0 || !drew ? 1 : easeInOut(lt / TR);
-    drawPage(ctx, d.pages[w.i], d.w, d.h, lt);
+    if (drew && pIn < 1) applyTransIn(ctx, tr, pIn, d.w, d.h);
+    const nx = tl[w.i + 1];
+    if (nx && T >= nx.start) {
+      const ntd = trDur(d.pages[w.i + 1]);
+      if (ntd > 0) applyTransOut(ctx, transOf(d.pages[w.i + 1]).type, easeInOut((T - nx.start) / ntd), d.w, d.h);
+    }
+    drawPage(ctx, p, d.w, d.h, lt);
     ctx.restore();
+    if (drew && tr === 'flash' && pIn < 1) {
+      ctx.save();
+      ctx.globalAlpha = 1 - Math.abs(pIn * 2 - 1);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, d.w, d.h);
+      ctx.restore();
+    }
     drew = true;
   });
   if (!drew) drawPage(ctx, d.pages[d.pages.length - 1], d.w, d.h, null);
@@ -681,8 +764,475 @@ function drawAt(ctx, d, T) {
 function pageAt(d, T) {
   const tl = timeline(d);
   let idx = 0;
-  tl.forEach(w => { if (T >= w.start + (w.i ? TR / 2 : 0)) idx = w.i; });
+  tl.forEach(w => { if (T >= w.start + (w.i ? trDur(d.pages[w.i]) / 2 : 0)) idx = w.i; });
   return idx;
+}
+
+/* ------------------------------------------------------------------ */
+/* Videos subidos                                                       */
+/* ------------------------------------------------------------------ */
+function mediaURL(src) {
+  if (!src || !src.startsWith('up:')) return null;
+  const u = uploads.get(src.slice(3));
+  if (!u || !u.blob) return null;
+  if (!u.url) u.url = URL.createObjectURL(u.blob);
+  return u.url;
+}
+const vidCache = new Map(); // id del elemento -> { v, src, node, gain }
+function videoFor(el) {
+  const url = mediaURL(el.src);
+  if (!url) return null;
+  let c = vidCache.get(el.id);
+  if (!c || c.src !== el.src) {
+    if (c) { c.v.pause(); if (c.node) try { c.node.disconnect(); } catch (e) { /* ya desconectado */ } }
+    const v = document.createElement('video');
+    v.playsInline = true;
+    v.preload = 'auto';
+    v.src = url;
+    v.addEventListener('loadeddata', () => { if (!state.playing) v.currentTime = el.start || 0; requestRender(true); });
+    v.addEventListener('seeked', () => requestRender(true));
+    c = { v, src: el.src, node: null, gain: null };
+    vidCache.set(el.id, c);
+    if (ac) connectVideo(c);
+  }
+  return c;
+}
+function connectVideo(c) {
+  if (c.node || !ac) return;
+  try {
+    c.node = ac.createMediaElementSource(c.v);
+    c.gain = ac.createGain();
+    c.node.connect(c.gain).connect(master);
+  } catch (e) { /* el navegador no permite conectar este video */ }
+}
+function drawVideoEl(ctx, el, opts) {
+  ctx.save();
+  shapePath(ctx, el.mask === 'circle' ? 'ellipse' : el.mask === 'arch' ? 'arch' : 'rect', el.w, el.h, el.mask === 'rounded' ? Math.min(el.w, el.h) * 0.08 : el.radius || 0);
+  ctx.clip();
+  const c = videoFor(el);
+  if (c && c.v.readyState >= 2) drawCover(ctx, c.v, -el.w / 2, -el.h / 2, el.w, el.h);
+  else {
+    const poster = getImg(el.src);
+    if (poster) drawCover(ctx, poster, -el.w / 2, -el.h / 2, el.w, el.h);
+    else {
+      const g = ctx.createLinearGradient(0, -el.h / 2, 0, el.h / 2);
+      g.addColorStop(0, hexA('$3', 1)); g.addColorStop(1, hexA('$0', 1));
+      ctx.fillStyle = g;
+      ctx.fillRect(-el.w / 2, -el.h / 2, el.w, el.h);
+      if (opts && opts.editor && !el.src) {
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.font = `600 ${Math.max(18, Math.min(el.w, el.h) * 0.035)}px Manrope`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        setLS(ctx, 0);
+        ctx.fillText('Selecciona este marco y sube tu video', 0, Math.min(140, el.h * 0.12));
+      }
+    }
+  }
+  if (opts && opts.editor && !state.playing) {
+    // distintivo de video en el editor
+    const r = Math.min(64, Math.min(el.w, el.h) * 0.12);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.moveTo(-r * 0.3, -r * 0.45); ctx.lineTo(r * 0.5, 0); ctx.lineTo(-r * 0.3, r * 0.45); ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+}
+function pageWindows(d, single) { return single != null ? [{ i: single, start: 0, end: d.pages[single].dur }] : timeline(d); }
+// Mantiene los videos sincronizados con el reloj de la reproducción
+function syncVideos(d, T, single) {
+  const active = new Set();
+  pageWindows(d, single).forEach(w => {
+    if (T < w.start || T > w.end) return;
+    const lt = T - w.start;
+    d.pages[w.i].els.forEach(el => {
+      if (el.type !== 'video') return;
+      const c = videoFor(el);
+      if (!c) return;
+      const v = c.v;
+      active.add(el.id);
+      const want = (el.start || 0) + lt;
+      if (c.gain) c.gain.gain.value = el.muted ? 0 : (el.vol ?? 1);
+      else v.muted = !!el.muted;
+      if (v.duration && want >= v.duration - 0.05) { if (!v.paused) v.pause(); return; }
+      if (v.paused) { v.currentTime = want; v.play().catch(() => {}); }
+      else if (Math.abs(v.currentTime - want) > 0.3) v.currentTime = want;
+    });
+  });
+  vidCache.forEach((c, id) => { if (!active.has(id) && !c.v.paused) c.v.pause(); });
+}
+function resetVideos(d) {
+  vidCache.forEach(c => c.v.pause());
+  if (!d) return;
+  d.pages.forEach(p => p.els.forEach(el => {
+    if (el.type !== 'video') return;
+    const c = vidCache.get(el.id);
+    if (c && c.v.readyState >= 1) c.v.currentTime = el.start || 0;
+  }));
+}
+
+/* ------------------------------------------------------------------ */
+/* Sonido: efectos sintetizados (teclado, whoosh, pop) y música         */
+/* ------------------------------------------------------------------ */
+const SOUND_DEFAULT = { typing: true, whoosh: true, pops: true, sfxVol: 0.7, music: null, musicVol: 0.45, musicStart: 0 };
+const soundOf = (d) => ({ ...SOUND_DEFAULT, ...(d.sound || {}) });
+let ac = null, master = null, noiseBuf = null, sfxBus = null, musicSrc = null;
+const musicBufs = new Map();
+function ensureAudio() {
+  if (!ac) {
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    master = ac.createGain();
+    master.connect(ac.destination);
+    noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
+    const ch = noiseBuf.getChannelData(0);
+    for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1;
+    vidCache.forEach(connectVideo);
+  }
+  if (ac.state === 'suspended') ac.resume();
+  return ac;
+}
+function sfxType(bus, when, vol = 1) {
+  // clic de tecla: ráfaga de ruido filtrada + golpe grave corto
+  const src = ac.createBufferSource();
+  src.buffer = noiseBuf;
+  const bp = ac.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 1800 + Math.random() * 2600;
+  bp.Q.value = 3 + Math.random() * 3;
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0.0001, when);
+  g.gain.linearRampToValueAtTime(0.55 * vol, when + 0.002);
+  g.gain.exponentialRampToValueAtTime(0.0001, when + 0.04 + Math.random() * 0.02);
+  src.connect(bp).connect(g).connect(bus);
+  src.start(when, Math.random() * 0.8, 0.07);
+  const o = ac.createOscillator();
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(150 + Math.random() * 90, when);
+  const g2 = ac.createGain();
+  g2.gain.setValueAtTime(0.22 * vol, when);
+  g2.gain.exponentialRampToValueAtTime(0.0001, when + 0.035);
+  o.connect(g2).connect(bus);
+  o.start(when); o.stop(when + 0.05);
+}
+function sfxWhoosh(bus, when, dur = 0.55, vol = 1) {
+  const src = ac.createBufferSource();
+  src.buffer = noiseBuf;
+  src.loop = true;
+  const bp = ac.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.Q.value = 1.1;
+  bp.frequency.setValueAtTime(250, when);
+  bp.frequency.exponentialRampToValueAtTime(3200, when + dur * 0.7);
+  bp.frequency.exponentialRampToValueAtTime(900, when + dur);
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0.0001, when);
+  g.gain.linearRampToValueAtTime(0.38 * vol, when + dur * 0.45);
+  g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+  src.connect(bp).connect(g).connect(bus);
+  src.start(when); src.stop(when + dur + 0.05);
+}
+function sfxPop(bus, when, vol = 1) {
+  const o = ac.createOscillator();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(620, when);
+  o.frequency.exponentialRampToValueAtTime(170, when + 0.11);
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0.0001, when);
+  g.gain.linearRampToValueAtTime(0.5 * vol, when + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, when + 0.16);
+  o.connect(g).connect(bus);
+  o.start(when); o.stop(when + 0.18);
+}
+function soundEvents(d, single) {
+  const s = soundOf(d);
+  const ev = [];
+  pageWindows(d, single).forEach(w => {
+    const p = d.pages[w.i];
+    if (single == null && w.i > 0 && s.whoosh && trDur(p) > 0) ev.push({ t: w.start, k: 'whoosh', dur: trDur(p) + 0.2 });
+    p.els.forEach(el => {
+      const an = el.anim;
+      if (!an) return;
+      const t0 = w.start + (an.delay || 0);
+      if (an.type === 'type' && el.type === 'text' && s.typing) {
+        const txt = el.upper ? String(el.text).toUpperCase() : String(el.text);
+        const n = txt.length;
+        let last = -1;
+        for (let i = 0; i < n; i++) {
+          if (/\s/.test(txt[i])) continue;
+          const t = t0 + an.dur * (i / n);
+          if (t - last < 0.045) continue;
+          last = t;
+          ev.push({ t, k: 'type' });
+        }
+      } else if (an.type === 'pop' && s.pops) ev.push({ t: t0, k: 'pop' });
+      else if ((an.type === 'slideL' || an.type === 'slideR') && s.whoosh) ev.push({ t: t0, k: 'whoosh', dur: Math.max(0.3, an.dur * 0.7), soft: true });
+    });
+  });
+  return ev.sort((a, b) => a.t - b.t);
+}
+async function getMusic(id) {
+  if (musicBufs.has(id)) return musicBufs.get(id);
+  const u = uploads.get(id);
+  if (!u || !u.blob) return null;
+  ensureAudio();
+  const buf = await ac.decodeAudioData(await u.blob.arrayBuffer());
+  musicBufs.set(id, buf);
+  return buf;
+}
+// Programa todos los sonidos desde fromT. Devuelve el instante de audio que corresponde a T=0.
+function startSound(d, fromT, single) {
+  ensureAudio();
+  stopSound();
+  const s = soundOf(d);
+  sfxBus = ac.createGain();
+  sfxBus.gain.value = s.sfxVol;
+  sfxBus.connect(master);
+  const base = ac.currentTime + 0.05 - fromT;
+  soundEvents(d, single).forEach(e => {
+    if (e.t < fromT - 0.01) return;
+    const when = base + e.t;
+    if (e.k === 'type') sfxType(sfxBus, when);
+    else if (e.k === 'pop') sfxPop(sfxBus, when);
+    else if (e.k === 'whoosh') sfxWhoosh(sfxBus, when, e.dur, e.soft ? 0.5 : 1);
+  });
+  if (s.music && single == null) {
+    const buf = musicBufs.get(s.music);
+    if (buf) {
+      const src = ac.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+      const g = ac.createGain();
+      const end = base + totalDur(d);
+      g.gain.setValueAtTime(0.0001, base + fromT);
+      g.gain.linearRampToValueAtTime(s.musicVol, base + fromT + 0.4);
+      g.gain.setValueAtTime(s.musicVol, Math.max(base + fromT + 0.5, end - 1.6));
+      g.gain.linearRampToValueAtTime(0.0001, end);
+      src.connect(g).connect(master);
+      src.start(base + fromT, ((s.musicStart || 0) + fromT) % buf.duration);
+      src.stop(end + 0.1);
+      musicSrc = src;
+    } else getMusic(s.music).catch(() => {});
+  }
+  return base;
+}
+function stopSound() {
+  if (sfxBus) { try { sfxBus.disconnect(); } catch (e) { /* ya desconectado */ } sfxBus = null; }
+  if (musicSrc) { try { musicSrc.stop(); } catch (e) { /* ya detenido */ } musicSrc = null; }
+}
+function previewSfx(kind) {
+  ensureAudio();
+  const bus = ac.createGain();
+  bus.gain.value = soundOf(dsg()).sfxVol;
+  bus.connect(master);
+  const t = ac.currentTime + 0.05;
+  if (kind === 'type') for (let i = 0; i < 14; i++) sfxType(bus, t + i * (0.06 + Math.random() * 0.05));
+  else if (kind === 'pop') sfxPop(bus, t);
+  else sfxWhoosh(bus, t, 0.6);
+  setTimeout(() => bus.disconnect(), 2500);
+}
+
+/* ------------------------------------------------------------------ */
+/* Subtítulos                                                           */
+/* ------------------------------------------------------------------ */
+const CAP_DEFAULT = { preset: 'resaltado', y: 0.74, size: 64, font: '$body', weight: 800, color: '#ffffff', hi: '$2', upper: false, lang: 'spanish' };
+const CAP_PRESETS = [
+  { id: 'resaltado', name: 'Resaltado' }, { id: 'karaoke', name: 'Karaoke' }, { id: 'pop', name: 'Palabra' },
+  { id: 'clasico', name: 'Clásico' }, { id: 'caja', name: 'Caja' }, { id: 'none', name: 'Ocultos' }
+];
+const capOf = (d) => ({ ...CAP_DEFAULT, ...((d && d.capStyle) || {}) });
+function capWords(cap) {
+  const words = String(cap.text).trim().split(/\s+/).filter(Boolean);
+  const total = words.reduce((s, w) => s + w.length + 1, 0) || 1;
+  let acc = 0;
+  return words.map(w => {
+    const a = cap.a + (cap.b - cap.a) * acc / total;
+    acc += w.length + 1;
+    return { w, a, b: cap.a + (cap.b - cap.a) * acc / total };
+  });
+}
+function drawCaptions(ctx, page, W, H, t, opts) {
+  const caps = page.caps;
+  const d = state.design;
+  if (!caps || !caps.length || !d) return;
+  const st = capOf(d);
+  if (st.preset === 'none') return;
+  let cap, lt = t;
+  if (t == null) {
+    if (!(opts && opts.editor)) return; // en miniaturas y PNG solo si hay tiempo
+    cap = caps[0]; lt = cap.a + (cap.b - cap.a) * 0.4;
+  } else cap = caps.find(c => t >= c.a && t < c.b);
+  if (!cap || !String(cap.text).trim()) return;
+  const words = capWords(cap);
+  const k = Math.min(W, H) / 1080;
+  const size = st.size * k;
+  const fam = rf(st.font);
+  ensureFont(fam, st.weight);
+  const disp = (s) => (st.upper ? s.toUpperCase() : s);
+  ctx.save();
+  ctx.textBaseline = 'middle';
+  ctx.lineJoin = 'round';
+  setLS(ctx, 0);
+  const cy = H * st.y;
+  const hi = rc(st.hi), col = rc(st.color);
+
+  if (st.preset === 'pop') {
+    const cur = words.find(x => lt >= x.a && lt < x.b) || words[words.length - 1];
+    const p = clamp01((lt - cur.a) / 0.14);
+    const s = 0.7 + 0.3 * easeBack(p);
+    const big = size * 1.55;
+    ctx.font = `${st.weight} ${big}px "${fam}"`;
+    ctx.translate(W / 2, cy);
+    ctx.scale(s, s);
+    ctx.textAlign = 'center';
+    ctx.lineWidth = big * 0.16;
+    ctx.strokeStyle = 'rgba(0,0,0,0.85)';
+    ctx.strokeText(disp(cur.w), 0, 0);
+    ctx.fillStyle = hi;
+    ctx.fillText(disp(cur.w), 0, 0);
+    ctx.restore();
+    return;
+  }
+
+  ctx.font = `${st.weight} ${size}px "${fam}"`;
+  const space = ctx.measureText(' ').width;
+  const maxW = W * 0.84;
+  const lines = [[]];
+  let lw = 0;
+  words.forEach(x => {
+    const w = ctx.measureText(disp(x.w)).width;
+    if (lines[lines.length - 1].length && lw + space + w > maxW) { lines.push([]); lw = 0; }
+    const line = lines[lines.length - 1];
+    lw += (line.length ? space : 0) + w;
+    line.push({ ...x, width: w });
+  });
+  const lh = size * 1.28;
+  const top = cy - (lines.length * lh) / 2;
+  if (st.preset === 'caja') {
+    const bw = Math.max(...lines.map(l => l.reduce((s, x) => s + x.width, 0) + space * (l.length - 1))) + size * 1.1;
+    const bh = lines.length * lh + size * 0.6;
+    ctx.fillStyle = 'rgba(10,10,12,0.72)';
+    shapeRect(ctx, W / 2 - bw / 2, top - size * 0.3, bw, bh, size * 0.35);
+    ctx.fill();
+  }
+  lines.forEach((line, li) => {
+    const total = line.reduce((s, x) => s + x.width, 0) + space * (line.length - 1);
+    let x = W / 2 - total / 2;
+    const y = top + li * lh + lh / 2;
+    line.forEach(wd => {
+      const active = lt >= wd.a && lt < wd.b;
+      const txt = disp(wd.w);
+      ctx.textAlign = 'left';
+      if (st.preset === 'karaoke' && active) {
+        ctx.fillStyle = hi;
+        shapeRect(ctx, x - size * 0.16, y - size * 0.62, wd.width + size * 0.32, size * 1.24, size * 0.22);
+        ctx.fill();
+        ctx.fillStyle = lum(st.hi) > 0.55 ? '#111' : '#fff';
+        ctx.fillText(txt, x, y);
+      } else {
+        if (st.preset !== 'caja') {
+          ctx.lineWidth = size * 0.17;
+          ctx.strokeStyle = 'rgba(0,0,0,0.82)';
+          ctx.strokeText(txt, x, y);
+        }
+        ctx.fillStyle = st.preset === 'resaltado' && active ? hi : col;
+        ctx.fillText(txt, x, y);
+      }
+      x += wd.width + space;
+    });
+  });
+  ctx.restore();
+}
+function shapeRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+// Reconocimiento de voz en el navegador (Whisper vía transformers.js). El
+// audio nunca sale del computador; la primera vez se descarga el modelo.
+const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
+const ASR_MODEL = 'onnx-community/whisper-base';
+let asrP = null;
+function getASR(onProg) {
+  if (!asrP) {
+    asrP = (async () => {
+      const T = await import(TRANSFORMERS_URL);
+      T.env.allowLocalModels = false;
+      return T.pipeline('automatic-speech-recognition', ASR_MODEL, { device: 'wasm', dtype: 'q8', progress_callback: onProg });
+    })();
+    asrP.catch(() => { asrP = null; });
+  }
+  return asrP;
+}
+async function audio16k(blob, start, dur) {
+  const tmp = new (window.AudioContext || window.webkitAudioContext)();
+  let ab;
+  try { ab = await tmp.decodeAudioData(await blob.arrayBuffer()); } finally { tmp.close(); }
+  const s = Math.max(0, start || 0);
+  const e = Math.min(ab.duration, s + dur);
+  if (e - s < 0.3) throw new Error('corto');
+  const off = new OfflineAudioContext(1, Math.ceil((e - s) * 16000), 16000);
+  const src = off.createBufferSource();
+  src.buffer = ab;
+  src.connect(off.destination);
+  src.start(0, s, e - s);
+  return (await off.startRendering()).getChannelData(0);
+}
+function splitCaps(chunks, maxWords = 4, maxChars = 24) {
+  const out = [];
+  chunks.forEach(c => {
+    const a = c.timestamp[0] ?? 0;
+    const b = c.timestamp[1] ?? a + 2;
+    const words = String(c.text).trim().split(/\s+/).filter(Boolean);
+    if (!words.length) return;
+    const groups = [];
+    let cur = [];
+    words.forEach(w => {
+      if (cur.length && (cur.length >= maxWords || (cur.join(' ') + ' ' + w).length > maxChars)) { groups.push(cur); cur = []; }
+      cur.push(w);
+    });
+    if (cur.length) groups.push(cur);
+    const totalC = words.join(' ').length + 1;
+    let acc = 0;
+    groups.forEach(g => {
+      const txt = g.join(' ');
+      const ga = a + (b - a) * acc / totalC;
+      acc += txt.length + 1;
+      const gb = a + (b - a) * Math.min(1, acc / totalC);
+      out.push({ a: +ga.toFixed(2), b: +gb.toFixed(2), text: txt });
+    });
+  });
+  return out;
+}
+async function transcribePage(pi, status) {
+  const d = dsg();
+  const p = d.pages[pi];
+  const vids = p.els.filter(e => e.type === 'video' && uploads.get((e.src || '').slice(3))?.blob);
+  if (!vids.length) return 0;
+  const el = vids.sort((a, b) => b.w * b.h - a.w * a.h)[0];
+  const u = uploads.get(el.src.slice(3));
+  status(`Preparando el audio de la página ${pi + 1}…`);
+  let audio;
+  try { audio = await audio16k(u.blob, el.start || 0, p.dur); } catch (e) { status(`La página ${pi + 1}: el video no tiene audio que se pueda leer.`); return 0; }
+  const files = {};
+  const asr = await getASR((ev) => {
+    if (ev.status === 'progress' && ev.total) {
+      files[ev.file] = [ev.loaded, ev.total];
+      const v = Object.values(files);
+      const pct = Math.round(100 * v.reduce((s, x) => s + x[0], 0) / v.reduce((s, x) => s + x[1], 0));
+      status(`Descargando el modelo de voz (solo la primera vez)… ${pct}%`);
+    }
+  });
+  status(`Escuchando la página ${pi + 1}…`);
+  const lang = capOf(d).lang;
+  const r = await asr(audio, { task: 'transcribe', return_timestamps: true, chunk_length_s: 30, stride_length_s: 5, ...(lang && lang !== 'auto' ? { language: lang } : {}) });
+  const chunks = r.chunks && r.chunks.length ? r.chunks : [{ timestamp: [0, audio.length / 16000], text: r.text }];
+  p.caps = splitCaps(chunks).filter(c => c.a < p.dur);
+  return p.caps.length;
 }
 
 /* ------------------------------------------------------------------ */
@@ -795,7 +1345,7 @@ function buildShell() {
   </header>
   <div class="st-body">
     <nav class="st-rail">
-      ${[['templates', 'layout', 'Diseño'], ['elements', 'shapes', 'Elementos'], ['text', 'type', 'Texto'], ['brand', 'brand', 'Marca'], ['uploads', 'upload', 'Subidas'], ['background', 'bg', 'Fondo'], ['projects', 'folder', 'Proyectos']]
+      ${[['templates', 'layout', 'Diseño'], ['elements', 'shapes', 'Elementos'], ['text', 'type', 'Texto'], ['uploads', 'upload', 'Subidas'], ['audio', 'music', 'Audio'], ['captions', 'cc', 'Subtítulos'], ['background', 'bg', 'Fondo'], ['brand', 'brand', 'Marca'], ['projects', 'folder', 'Proyectos']]
         .map(([id, ic, label]) => `<button class="st-rail-btn" data-drawer="${id}">${icon(ic, 22)}<span>${label}</span></button>`).join('')}
     </nav>
     <aside class="st-drawer" id="stDrawer"></aside>
@@ -823,7 +1373,7 @@ function buildShell() {
   <div class="st-cmenu" id="stCmenu" hidden></div>
   <div class="st-modal" id="stModal" hidden></div>
   <textarea class="st-edit" id="stEdit" hidden spellcheck="false"></textarea>
-  <input type="file" id="stFile" accept="image/*" multiple hidden>
+  <input type="file" id="stFile" accept="image/*,video/*,audio/*" multiple hidden>
   <input type="file" id="stLogoFile" accept="image/*" hidden>`;
   document.body.appendChild(root);
 
@@ -947,7 +1497,7 @@ function renderPages() {
   const d = dsg();
   const box = $('#stPages');
   const th = 64, tw = Math.round(th * d.w / d.h);
-  box.innerHTML = d.pages.map((p, i) => `
+  box.innerHTML = d.pages.map((p, i) => `${i > 0 ? `<button class="st-trans-btn ${transOf(p).type === 'cut' ? 'is-cut' : ''}" data-act="pick-trans" data-v="${i}" title="Transición: ${TRANSITIONS.find(t => t.id === transOf(p).type)?.name}">${icon('trans', 14)}</button>` : ''}
     <div class="st-page ${i === state.page ? 'is-active' : ''}" data-page="${i}" draggable="true">
       <canvas width="${tw * 2}" height="${th * 2}" style="width:${tw}px;height:${th}px"></canvas>
       <span class="st-page-n">${i + 1}</span>
@@ -1000,7 +1550,9 @@ function renderCtx() {
       <div class="st-ctx-sep"></div>
       <label class="st-ctx-group st-ctx-label">Duración <input class="st-num" type="number" min="1" max="30" step="0.5" value="${p.dur}" data-input="page-dur"> s</label>
       <div class="st-ctx-sep"></div>
+      ${state.page > 0 ? `<button class="st-ctx-btn" data-act="pick-trans" data-v="${state.page}">${icon('trans', 18)}<span>Transición: ${TRANSITIONS.find(t => t.id === transOf(p).type)?.name}</span></button>` : ''}
       <button class="st-ctx-btn" data-act="magic-anim">${icon('wand', 18)}<span>Animar página</span></button>
+      <button class="st-ctx-btn" data-drawer="captions">${icon('cc', 18)}<span>Subtítulos${p.caps && p.caps.length ? ` (${p.caps.length})` : ''}</span></button>
       <button class="st-ctx-btn" data-act="dup-page">${icon('dup', 18)}<span>Duplicar página</span></button>
       <button class="st-ctx-btn" data-act="del-page" ${dsg().pages.length < 2 ? 'disabled' : ''}>${icon('trash', 18)}<span>Eliminar página</span></button>`;
     return;
@@ -1024,6 +1576,15 @@ function renderCtx() {
       ${el.shape === 'rect' ? `<label class="st-ctx-label">Esquinas <input class="st-num" type="number" min="0" max="500" value="${el.radius}" data-input="radius"></label>` : ''}`;
   } else if (el.type === 'image') {
     html += `<button class="st-ctx-btn" data-act="replace-img">${icon('image', 18)}<span>${el.src ? 'Reemplazar' : 'Poner foto'}</span></button>
+      <div class="st-seg">${[['rect', 'Recto'], ['rounded', 'Suave'], ['circle', 'Círculo'], ['arch', 'Arco']].map(([m, l]) => `<button class="${el.mask === m ? 'is-on' : ''}" data-act="mask" data-v="${m}">${l}</button>`).join('')}</div>`;
+  } else if (el.type === 'video') {
+    const u = uploads.get((el.src || '').slice(3));
+    html += `<button class="st-ctx-btn" data-act="replace-img">${icon('video', 18)}<span>Reemplazar</span></button>
+      <button class="st-tbtn ${el.muted ? 'is-on' : ''}" data-act="vid-mute" title="${el.muted ? 'Activar sonido' : 'Silenciar'}">${icon(el.muted ? 'mute' : 'volume', 18)}</button>
+      <label class="st-ctx-label">Volumen <input type="range" min="0" max="1" step="0.05" value="${el.vol ?? 1}" data-input="vid-vol" style="width:80px"></label>
+      <label class="st-ctx-label">${icon('scissors', 16)} Empieza en <input class="st-num" type="number" min="0" max="${u?.dur ? u.dur.toFixed(1) : 600}" step="0.1" value="${el.start || 0}" data-input="vid-start"> s</label>
+      <button class="st-ctx-btn" data-act="vid-fit-page" title="La página dura lo mismo que el video">${icon('resize', 16)}<span>Ajustar página${u?.dur ? ` (${Math.max(0, u.dur - (el.start || 0)).toFixed(1)} s)` : ''}</span></button>
+      <button class="st-ctx-btn" data-act="vid-bg">${icon('bg', 16)}<span>Usar de fondo</span></button>
       <div class="st-seg">${[['rect', 'Recto'], ['rounded', 'Suave'], ['circle', 'Círculo'], ['arch', 'Arco']].map(([m, l]) => `<button class="${el.mask === m ? 'is-on' : ''}" data-act="mask" data-v="${m}">${l}</button>`).join('')}</div>`;
   } else if (el.type === 'logo') {
     html += `${swatchBtn('pick-logo', el.color, 'Color del monograma')}
@@ -1077,6 +1638,7 @@ const DRAWERS = {
       <h3 class="st-h3">Marcos para fotos</h3>
       <div class="st-el-grid">${[['rect', '<rect x="8" y="8" width="40" height="40"/>'], ['rounded', '<rect x="8" y="8" width="40" height="40" rx="8"/>'], ['circle', '<circle cx="28" cy="28" r="20"/>'], ['arch', '<path d="M10 50V28a18 18 0 0 1 36 0v22z"/>']]
         .map(([m, p]) => `<button class="st-el st-frame" data-act="add-frame" data-v="${m}"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3">${p}</svg></button>`).join('')}</div>
+      <button class="st-row w-full" data-act="add-vframe" style="margin-top:8px"><span class="st-row-ic">${icon('video', 18)}</span><span><b>Marco para video</b><small>Selecciónalo y sube tu video</small></span></button>
       <h3 class="st-h3">Detalles de marca</h3>
       <div class="st-list">
         <button class="st-row" data-act="add-logo"><span class="st-row-ic st-mono-ic">${esc(brand.monogram)}</span><span><b>${brand.logo ? 'Mi logo' : 'Monograma'}</b><small>${brand.logo ? 'El logo que subiste' : 'Tus iniciales con anillo'}</small></span></button>
@@ -1126,19 +1688,75 @@ const DRAWERS = {
       <button class="st-btn st-btn-ghost w-full" data-act="reset-brand">Restablecer kit</button>`;
   },
   uploads() {
-    const list = Array.from(uploads.values()).sort((a, b) => b.t - a.t);
-    return `<button class="st-btn st-btn-big" data-act="upload">${icon('upload', 18)} Subir fotos o renders</button>
-      <p class="st-muted">También puedes arrastrarlas al lienzo. Si tienes un marco seleccionado, la foto va dentro.</p>
-      ${list.length ? `<div class="st-up-grid">${list.map(u => `
-        <div class="st-up"><button class="st-up-img" data-act="use-upload" data-v="${u.id}"><img src="${u.data}" alt=""></button><button class="st-up-x" data-act="del-upload" data-v="${u.id}" title="Borrar">${icon('x', 12)}</button></div>`).join('')}</div>`
-        : `<div class="st-empty">${icon('image', 28)}<span>Aquí aparecerán tus fotos</span></div>`}`;
+    const all = Array.from(uploads.values()).sort((a, b) => b.t - a.t);
+    const vis = all.filter(u => u.kind !== 'audio');
+    const auds = all.filter(u => u.kind === 'audio');
+    const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+    return `<button class="st-btn st-btn-big" data-act="upload">${icon('upload', 18)} Subir videos, fotos o audio</button>
+      <p class="st-muted">MP4, MOV (H.264), WebM, JPG, PNG, MP3 o WAV. También puedes arrastrarlos al lienzo. Si tienes un marco seleccionado, el video o la foto entra en él.</p>
+      ${vis.length ? `<div class="st-up-grid">${vis.map(u => `
+        <div class="st-up"><button class="st-up-img" data-act="use-upload" data-v="${u.id}"><img src="${u.kind === 'video' ? u.thumb : u.data}" alt="">${u.kind === 'video' ? `<span class="st-up-dur">${icon('video', 12)} ${fmt(u.dur || 0)}</span>` : ''}</button><button class="st-up-x" data-act="del-upload" data-v="${u.id}" title="Borrar">${icon('x', 12)}</button></div>`).join('')}</div>`
+        : `<div class="st-empty">${icon('video', 28)}<span>Aquí aparecerán tus videos y fotos</span></div>`}
+      ${auds.length ? `<h3 class="st-h3">Audio</h3><div class="st-list">${auds.map(u => `
+        <div class="st-row"><span class="st-row-ic">${icon('music', 18)}</span><span style="flex:1;min-width:0"><b class="st-ellipsis">${esc(u.name)}</b><small>${fmt(u.dur || 0)}</small></span><button class="st-btn st-btn-ghost" data-act="set-music" data-v="${u.id}">Usar de música</button></div>`).join('')}</div>` : ''}`;
+  },
+  audio() {
+    const s = soundOf(dsg());
+    const auds = Array.from(uploads.values()).filter(u => u.kind === 'audio');
+    const cur = s.music ? uploads.get(s.music) : null;
+    return `<h3 class="st-h3">Música de fondo</h3>
+      ${cur ? `<div class="st-row st-row-on"><span class="st-row-ic">${icon('music', 18)}</span><span style="flex:1;min-width:0"><b class="st-ellipsis">${esc(cur.name)}</b><small>Suena en todo el video y baja al final</small></span><button class="st-iconbtn" data-act="set-music" data-v="" title="Quitar">${icon('x', 16)}</button></div>
+        <label class="st-field st-field-row"><span>Volumen</span><input type="range" min="0" max="1" step="0.05" value="${s.musicVol}" data-input="music-vol"></label>
+        <label class="st-field st-field-row"><span>Empezar la canción en</span><input class="st-num" type="number" min="0" step="1" value="${s.musicStart}" data-input="music-start"> s</label>`
+        : `<p class="st-muted">Sube un MP3 o WAV y queda sonando bajo todo el video.</p>`}
+      ${auds.filter(u => u.id !== s.music).map(u => `<button class="st-row w-full" data-act="set-music" data-v="${u.id}"><span class="st-row-ic">${icon('music', 18)}</span><span><b>${esc(u.name)}</b><small>Usar esta canción</small></span></button>`).join('')}
+      <button class="st-btn st-btn-ghost w-full" data-act="upload-audio">${icon('upload', 16)} Subir música</button>
+      <h3 class="st-h3">Efectos de sonido</h3>
+      <div class="st-sfx">
+        <div class="st-sfx-row"><button class="st-chip ${s.typing ? 'is-on' : ''}" data-act="sfx-toggle" data-v="typing">Teclado</button><span>Suena con la animación “Máquina de escribir”.</span><button class="st-iconbtn" data-act="sfx-test" data-v="type" title="Probar">${icon('play', 14)}</button></div>
+        <div class="st-sfx-row"><button class="st-chip ${s.whoosh ? 'is-on' : ''}" data-act="sfx-toggle" data-v="whoosh">Whoosh</button><span>En las transiciones y deslizamientos.</span><button class="st-iconbtn" data-act="sfx-test" data-v="whoosh" title="Probar">${icon('play', 14)}</button></div>
+        <div class="st-sfx-row"><button class="st-chip ${s.pops ? 'is-on' : ''}" data-act="sfx-toggle" data-v="pops">Pop</button><span>Cuando algo aparece con “Pop”.</span><button class="st-iconbtn" data-act="sfx-test" data-v="pop" title="Probar">${icon('play', 14)}</button></div>
+      </div>
+      <label class="st-field st-field-row"><span>Volumen de efectos</span><input type="range" min="0" max="1" step="0.05" value="${s.sfxVol}" data-input="sfx-vol"></label>
+      <button class="st-btn w-full" data-act="typewriter-sel">${icon('type', 16)} Máquina de escribir en el texto seleccionado</button>
+      <p class="st-muted st-tiny">Los sonidos y la música se incluyen al descargar el MP4. El audio de tus videos también.</p>`;
+  },
+  captions() {
+    const d = dsg(), p = pg(), st = capOf(d);
+    const hasVid = d.pages.some(x => x.els.some(e => e.type === 'video'));
+    const caps = p.caps || [];
+    return `<h3 class="st-h3">Subtítulos automáticos</h3>
+      <p class="st-muted">Escucha el audio de tus videos y escribe los subtítulos con sus tiempos. Todo pasa en tu computador; la primera vez descarga el modelo de voz (unos 80 MB).</p>
+      <label class="st-field"><span>Idioma del video</span><select data-input="cap-lang">${[['spanish', 'Español'], ['english', 'Inglés'], ['portuguese', 'Portugués'], ['auto', 'Detectar']].map(([v, n]) => `<option value="${v}" ${st.lang === v ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+      <div class="st-btngrid2">
+        <button class="st-btn" data-act="cap-auto" ${hasVid ? '' : 'disabled'}>${icon('sparkle', 15)} Esta página</button>
+        <button class="st-btn st-btn-ghost" data-act="cap-auto-all" ${hasVid ? '' : 'disabled'}>Todo el video</button>
+      </div>
+      <div class="st-capstatus" id="stCapStatus">${hasVid ? '' : 'Sube un video en <b>Subidas</b> para generar subtítulos. También puedes escribirlos a mano abajo.'}</div>
+      <h3 class="st-h3">Estilo</h3>
+      <div class="st-cap-grid">${CAP_PRESETS.map(c => `<button class="st-cap ${st.preset === c.id ? 'is-on' : ''}" data-act="cap-preset" data-v="${c.id}"><span class="st-cap-demo st-cap-${c.id}">${c.id === 'pop' ? 'HOLA' : c.id === 'none' ? '—' : 'Hola <i>mundo</i>'}</span><small>${c.name}</small></button>`).join('')}</div>
+      <label class="st-field st-field-row"><span>Tamaño</span><input type="range" min="32" max="120" step="1" value="${st.size}" data-input="cap-size"></label>
+      <label class="st-field st-field-row"><span>Altura</span><input type="range" min="0.1" max="0.92" step="0.01" value="${st.y}" data-input="cap-y"></label>
+      <div class="st-field st-field-row"><span>Color</span>${swatchBtn('pick-cap-color', st.color, 'Color del texto')}<span>Resaltado</span>${swatchBtn('pick-cap-hi', st.hi, 'Color de resaltado')}</div>
+      <div class="st-chip-row">
+        <button class="st-chip ${st.upper ? 'is-on' : ''}" data-act="cap-upper">MAYÚSCULAS</button>
+        <button class="st-chip ${st.font === '$head' ? 'is-on' : ''}" data-act="cap-font" data-v="$head">Fuente de titular</button>
+        <button class="st-chip ${st.font === '$body' ? 'is-on' : ''}" data-act="cap-font" data-v="$body">Fuente de texto</button>
+      </div>
+      <h3 class="st-h3">Líneas de la página ${state.page + 1}</h3>
+      <div class="st-caplist">${caps.map((c, i) => `
+        <div class="st-capline">
+          <div class="st-captimes"><input class="st-num" type="number" step="0.1" min="0" value="${c.a}" data-input="cap-a" data-i="${i}"><span>→</span><input class="st-num" type="number" step="0.1" min="0" value="${c.b}" data-input="cap-b" data-i="${i}"><button class="st-iconbtn" data-act="cap-del" data-v="${i}" title="Borrar">${icon('trash', 14)}</button></div>
+          <input class="st-captext" value="${esc(c.text)}" data-input="cap-text" data-i="${i}">
+        </div>`).join('') || '<p class="st-muted">Esta página no tiene subtítulos todavía.</p>'}</div>
+      <div class="st-btngrid2"><button class="st-btn st-btn-ghost" data-act="cap-add">${icon('plus', 14)} Agregar línea</button><button class="st-btn st-btn-ghost" data-act="cap-clear" ${caps.length ? '' : 'disabled'}>Borrar todas</button></div>`;
   },
   background() {
     const p = pg();
     const solids = ['$0', '$1', '$2', '$3', '$4', '#ffffff', '#000000', '#1c1a17', '#e9e1d4', '#d8cfc2', '#3b3a36', '#5b4a3a'];
     const grads = [['linear', '$0', '$3'], ['linear', '$3', '$0'], ['radial', '$0', '$3'], ['linear', '#1a1714', '#3a2f24'], ['linear', '$1', '#d9cdbb'], ['radial', '#0e0e10', '#2c2620']];
     const glows = [['Ninguno', null], ['Arriba', [0.5, 0, 0.8]], ['Esquina', [0, 0, 0.7]], ['Lateral', [1, 0.4, 0.7]], ['Centro', [0.5, 0.5, 0.6]], ['Abajo', [0.5, 1, 0.8]]];
-    const ups = Array.from(uploads.values()).slice(0, 8);
+    const ups = Array.from(uploads.values()).filter(u => !u.kind || u.kind === 'image').slice(0, 8);
     return `<h3 class="st-h3">Color</h3>
       <div class="st-sw-grid">${solids.map(c => `<button class="st-sw ${p.bg.type === 'solid' && p.bg.c1 === c ? 'is-on' : ''}" data-act="bg-solid" data-v="${c}" style="background:${rc(c)}" title="${c[0] === '$' ? 'Color de marca' : c}"></button>`).join('')}
         <label class="st-sw st-sw-custom" title="Otro color"><input type="color" data-input="bg-custom" value="${rc(p.bg.c1)}">+</label></div>
@@ -1363,6 +1981,7 @@ function onClick(e) {
       addEl(sh); break;
     }
     case 'add-frame': addEl(IMG({ mask: v, w: 600, h: v === 'arch' ? 760 : 600 })); break;
+    case 'add-vframe': { const k = Math.min(d.w * 0.8 / 1080, d.h * 0.7 / 1920); addEl(VID({ w: 1080 * k, h: 1920 * k, mask: 'rounded' })); break; }
     case 'add-logo': addEl(LOGO({ w: 260, h: 260, color: '$2' })); break;
     case 'add-number': addEl(T('01', { font: '$head', size: 180, color: '$2', w: 360, op: 0.6 })); break;
     case 'add-divider': addEl(S('rect', { w: 160, h: 2, fill: '$2', anim: { type: 'wipe', delay: 0, dur: 0.8 } })); break;
@@ -1396,7 +2015,7 @@ function onClick(e) {
 
     case 'upload': $('#stFile').click(); break;
     case 'use-upload': useUpload(v); break;
-    case 'del-upload': uploads.delete(v); DB.del('uploads', v); renderDrawer(); break;
+    case 'del-upload': { const u = uploads.get(v); if (u && u.url) URL.revokeObjectURL(u.url); uploads.delete(v); DB.del('uploads', v); renderDrawer(); break; }
     case 'upload-logo': $('#stLogoFile').click(); break;
     case 'remove-logo': brand.logo = null; saveBrand(); renderDrawer(); requestRender(true); break;
     case 'reset-brand': if (confirm('¿Volver al kit de marca original?')) { brand = clone(DEFAULT_BRAND); saveBrand(); refitAllText(); renderAll(); } break;
@@ -1433,10 +2052,36 @@ function onClick(e) {
     case 'right-animate': state.right = state.right === 'animate' ? null : 'animate'; renderRight(); renderCtx(); break;
     case 'right-position': state.right = state.right === 'position' ? null : 'position'; renderRight(); renderCtx(); break;
     case 'right-close': state.right = null; renderRight(); renderCtx(); break;
-    case 'set-anim': if (el) { el.anim = { ...(el.anim || { delay: 0, dur: 0.8 }), type: v }; commit(); renderRight(); playPage(); } break;
+    case 'set-anim': if (el) {
+      el.anim = { ...(el.anim || { delay: 0, dur: 0.8 }), type: v };
+      if (v === 'type' && el.type === 'text') el.anim.dur = +clamp(String(el.text).length * 0.055, 0.6, 8).toFixed(1);
+      commit(); renderRight(); playPage();
+    } break;
     case 'layer': layer(v); break;
     case 'align-page': if (el) { if (v === 'left') el.x = 0; if (v === 'hcenter') el.x = (d.w - el.w) / 2; if (v === 'right') el.x = d.w - el.w; if (v === 'top') el.y = 0; if (v === 'vcenter') el.y = (d.h - el.h) / 2; if (v === 'bottom') el.y = d.h - el.h; commit(); renderStage(); renderRight(); } break;
     case 'select-el': select(v); break;
+    case 'pick-trans': openTransPop(b, +v); break;
+    case 'vid-mute': if (el) { el.muted = !el.muted; commit(); renderCtx(); } break;
+    case 'vid-fit-page': if (el) { const u = uploads.get(el.src.slice(3)); if (u?.dur) { pg().dur = +clamp(u.dur - (el.start || 0), 1, 180).toFixed(1); commit(); renderPages(); renderCtx(); toast(`La página dura ${pg().dur} s`); } } break;
+    case 'vid-bg': if (el) { el.x = 0; el.y = 0; el.w = d.w; el.h = d.h; el.rot = 0; el.mask = 'rect'; const els = pg().els; els.splice(els.indexOf(el), 1); els.unshift(el); commit(); renderStage(); } break;
+    case 'set-music': { const s = soundOf(d); d.sound = { ...s, music: v || null }; if (v) getMusic(v).catch(() => toast('No se pudo leer ese audio')); commit(); renderDrawer(); if (v) toast('Música agregada'); break; }
+    case 'upload-audio': $('#stFile').click(); break;
+    case 'sfx-toggle': { const s = soundOf(d); d.sound = { ...s, [v]: !s[v] }; commit(); renderDrawer(); break; }
+    case 'sfx-test': previewSfx(v); break;
+    case 'typewriter-sel':
+      if (el && el.type === 'text') { el.anim = { type: 'type', delay: el.anim?.delay || 0, dur: +clamp(String(el.text).length * 0.055, 0.6, 8).toFixed(1) }; commit(); playPage(); }
+      else toast('Selecciona primero un texto en el lienzo');
+      break;
+    case 'cap-auto': runTranscribe([state.page]); break;
+    case 'cap-auto-all': runTranscribe(d.pages.map((_, i) => i)); break;
+    case 'cap-preset': d.capStyle = { ...capOf(d), preset: v }; commit(); renderStage(); renderDrawer(); break;
+    case 'cap-upper': d.capStyle = { ...capOf(d), upper: !capOf(d).upper }; commit(); renderStage(); renderDrawer(); break;
+    case 'cap-font': d.capStyle = { ...capOf(d), font: v }; commit(); renderStage(); renderDrawer(); break;
+    case 'pick-cap-color': openColor(b, capOf(d).color, (c) => { d.capStyle = { ...capOf(d), color: c || '#ffffff' }; commit(); renderStage(); renderDrawer(); }); break;
+    case 'pick-cap-hi': openColor(b, capOf(d).hi, (c) => { d.capStyle = { ...capOf(d), hi: c || '$2' }; commit(); renderStage(); renderDrawer(); }); break;
+    case 'cap-add': { const caps = pg().caps || (pg().caps = []); const a = caps.length ? caps[caps.length - 1].b : 0; caps.push({ a: +a.toFixed(1), b: +Math.min(pg().dur, a + 2).toFixed(1), text: 'Escribe aquí' }); commit(); renderDrawer(); renderStage(); break; }
+    case 'cap-del': pg().caps.splice(+v, 1); commit(); renderDrawer(); renderStage(); break;
+    case 'cap-clear': if (confirm('¿Borrar los subtítulos de esta página?')) { pg().caps = []; commit(); renderDrawer(); renderStage(); } break;
     case 'cm-copy': copySel(); break;
     case 'cm-paste': paste(); break;
     default: break;
@@ -1479,6 +2124,15 @@ function onInput(e) {
     case 'glow-a': pg().glow.a = +v; renderStage(); break;
     case 'bg-tint': pg().bg.tint = +v; renderStage(); break;
     case 'bg-custom': pg().bg = { ...pg().bg, type: 'solid', c1: v }; renderStage(); break;
+    case 'vid-vol': if (el) el.vol = +v; break;
+    case 'vid-start': if (el) { el.start = Math.max(0, +v); const c = vidCache.get(el.id); if (c && c.v.readyState >= 1) c.v.currentTime = el.start; } break;
+    case 'music-vol': dsg().sound = { ...soundOf(dsg()), musicVol: +v }; break;
+    case 'music-start': dsg().sound = { ...soundOf(dsg()), musicStart: Math.max(0, +v) }; break;
+    case 'sfx-vol': dsg().sound = { ...soundOf(dsg()), sfxVol: +v }; break;
+    case 'cap-size': dsg().capStyle = { ...capOf(dsg()), size: +v }; renderStage(); break;
+    case 'cap-y': dsg().capStyle = { ...capOf(dsg()), y: +v }; renderStage(); break;
+    case 'cap-a': case 'cap-b': { const c = pg().caps[+t.dataset.i]; if (c) { c[k === 'cap-a' ? 'a' : 'b'] = Math.max(0, +v); } break; }
+    case 'cap-text': { const c = pg().caps[+t.dataset.i]; if (c) { c.text = v; renderStage(); } break; }
     case 'brand-name': brand.name = v; saveBrand(); break;
     case 'brand-mono': brand.monogram = v.toUpperCase(); saveBrand(); requestRender(true); break;
     case 'brand-tag': brand.tagline = v; saveBrand(); break;
@@ -1497,7 +2151,58 @@ function onChange(e) {
     refitAllText(); renderAll();
   }
   if (k === 'brand-name' || k === 'brand-tag' || k === 'brand-mono') renderDrawer();
+  if (k === 'cap-lang') { dsg().capStyle = { ...capOf(dsg()), lang: e.target.value }; commit(); }
+  if (k === 'cap-a' || k === 'cap-b') { pg().caps.sort((x, y) => x.a - y.a); commit(); renderDrawer(); }
   if (['pos-x', 'pos-y', 'pos-w', 'pos-h', 'pos-rot', 'page-dur', 'anim-delay', 'anim-dur'].includes(k)) { commit(); renderSelection(); }
+}
+
+function openTransPop(anchor, pi) {
+  const p = dsg().pages[pi];
+  if (!p) return;
+  const cur = transOf(p);
+  openPop(anchor, `<div class="st-pop-in st-transpop">
+    <h4 class="st-h4">Transición hacia la página ${pi + 1}</h4>
+    <div class="st-trans-grid">${TRANSITIONS.map(t => `<button class="st-transopt ${cur.type === t.id ? 'is-on' : ''}" data-trans="${t.id}"><span class="st-trans-demo st-trans-${t.id}"><i></i></span><small>${t.name}</small></button>`).join('')}</div>
+    <label class="st-field st-field-row"><span>Duración</span><input type="range" min="0.2" max="1.5" step="0.05" value="${cur.dur || 0.5}" data-trans-dur></label>
+    <div class="st-btngrid2"><button class="st-btn st-btn-ghost" data-trans-all>Usar en todas</button><button class="st-btn" data-trans-preview>${icon('play', 13)} Ver</button></div>
+  </div>`, (pop) => {
+    const save = () => { commit(); renderPages(); renderCtx(); };
+    pop.onclick = (e) => {
+      const t = e.target.closest('[data-trans]');
+      if (t) { p.trans = { ...cur, type: t.dataset.trans }; cur.type = t.dataset.trans; $$('.st-transopt', pop).forEach(x => x.classList.toggle('is-on', x === t)); save(); return; }
+      if (e.target.closest('[data-trans-all]')) { dsg().pages.forEach((x, i) => { if (i) x.trans = { ...transOf(p) }; }); save(); toast('Transición aplicada a todas las páginas'); return; }
+      if (e.target.closest('[data-trans-preview]')) {
+        closeFloating();
+        const w = timeline(dsg())[pi];
+        startPlay({ from: Math.max(0, w.start - 0.9), to: Math.min(totalDur(dsg()), w.start + trDur(p) + 1.2) });
+      }
+    };
+    $('[data-trans-dur]', pop).oninput = (e) => { p.trans = { ...transOf(p), dur: +e.target.value }; cur.dur = +e.target.value; clearTimeout(openTransPop.t); openTransPop.t = setTimeout(save, 300); };
+  });
+}
+
+let transcribing = false;
+async function runTranscribe(pages) {
+  if (transcribing) return;
+  transcribing = true;
+  const status = (m) => { const s = $('#stCapStatus'); if (s) s.innerHTML = m; };
+  let total = 0, withVid = 0;
+  try {
+    for (const i of pages) {
+      if (!dsg().pages[i].els.some(e => e.type === 'video')) continue;
+      withVid++;
+      total += await transcribePage(i, status);
+    }
+    commit();
+    renderStage(); renderCtx(); renderPages();
+    if (state.drawer === 'captions') renderDrawer();
+    const msg = withVid ? (total ? `Listo: ${total} líneas de subtítulos. Revísalas y corrige lo que haga falta.` : 'No se escuchó voz en el video.') : 'No hay videos en esa página.';
+    status(msg);
+    toast(msg);
+  } catch (e) {
+    console.error(e);
+    status('No se pudieron generar los subtítulos. Revisa tu conexión (la primera vez descarga el modelo) e inténtalo de nuevo.');
+  } finally { transcribing = false; }
 }
 
 function magicAnimate() {
@@ -1548,7 +2253,7 @@ function resizeDesign(f) {
   if (!f || (f.w === d.w && f.h === d.h)) return;
   const sx = f.w / d.w, sy = f.h / d.h, s = Math.min(sx, sy);
   d.pages.forEach(p => p.els.forEach(el => {
-    if (el.type === 'image' && el.x <= 1 && el.y <= 1 && el.w >= d.w - 2 && el.h >= d.h - 2) { el.w = f.w; el.h = f.h; return; } // foto a sangre
+    if ((el.type === 'image' || el.type === 'video') && el.x <= 1 && el.y <= 1 && el.w >= d.w - 2 && el.h >= d.h - 2) { el.w = f.w; el.h = f.h; return; } // foto a sangre
     const cx = (el.x + el.w / 2) * sx, cy = (el.y + el.h / 2) * sy;
     el.w *= s; el.h *= s;
     if (el.type === 'text') { el.size *= s; el.w = Math.min(f.w - 60, el.w * (sx / s > 1.2 ? 1.25 : 1)); fitText(el); }
@@ -1561,38 +2266,110 @@ function resizeDesign(f) {
 }
 
 /* ---------- Subidas ---------- */
+function videoMeta(file) {
+  return new Promise((res, rej) => {
+    const v = document.createElement('video');
+    v.preload = 'auto';
+    v.muted = true;
+    v.playsInline = true;
+    const url = URL.createObjectURL(file);
+    v.src = url;
+    const fail = () => { URL.revokeObjectURL(url); rej(new Error('video')); };
+    v.onerror = fail;
+    v.onloadedmetadata = () => { if (!v.videoWidth) fail(); else v.currentTime = Math.min(0.6, (v.duration || 1) / 3); };
+    v.onseeked = () => {
+      const k = Math.min(1, 480 / Math.max(v.videoWidth, v.videoHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
+      c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+      res({ w: v.videoWidth, h: v.videoHeight, dur: v.duration, thumb: c.toDataURL('image/jpeg', 0.82), url });
+    };
+    setTimeout(fail, 20000);
+  });
+}
+function audioMeta(file) {
+  return new Promise((res, rej) => {
+    const a = document.createElement('audio');
+    const url = URL.createObjectURL(file);
+    a.preload = 'metadata';
+    a.src = url;
+    a.onloadedmetadata = () => { res({ dur: a.duration, url }); };
+    a.onerror = () => { URL.revokeObjectURL(url); rej(new Error('audio')); };
+  });
+}
 async function handleFiles(files, dropPoint) {
-  const list = Array.from(files || []).filter(f => f.type.startsWith('image/'));
+  const list = Array.from(files || []).filter(f => /^(image|video|audio)\//.test(f.type) || /\.(mov|mp4|m4v|webm|mp3|wav|m4a|aac|ogg)$/i.test(f.name));
   if (!list.length) return;
-  let last = null;
+  let last = null, lastAudio = null;
   for (const f of list) {
+    const isVid = f.type.startsWith('video/') || /\.(mov|mp4|m4v|webm)$/i.test(f.name);
+    const isAud = !isVid && (f.type.startsWith('audio/') || /\.(mp3|wav|m4a|aac|ogg)$/i.test(f.name));
     try {
-      const r = await fileToData(f);
-      const u = { id: uid(), data: r.data, w: r.w, h: r.h, name: f.name, t: Date.now() };
-      uploads.set(u.id, u);
-      DB.put('uploads', u).catch(() => toast('La foto es muy pesada para guardarla, pero puedes usarla ahora'));
-      last = u;
-    } catch (e) { toast(`No se pudo leer ${f.name}`); }
+      let u;
+      if (isVid) {
+        toast(`Cargando ${f.name}…`);
+        const m = await videoMeta(f);
+        u = { id: uid(), kind: 'video', blob: f, w: m.w, h: m.h, dur: m.dur, thumb: m.thumb, name: f.name, t: Date.now() };
+        uploads.set(u.id, { ...u, url: m.url });
+        last = u;
+      } else if (isAud) {
+        const m = await audioMeta(f);
+        u = { id: uid(), kind: 'audio', blob: f, dur: m.dur, name: f.name, t: Date.now() };
+        uploads.set(u.id, { ...u, url: m.url });
+        lastAudio = u;
+      } else {
+        const r = await fileToData(f);
+        u = { id: uid(), kind: 'image', data: r.data, w: r.w, h: r.h, name: f.name, t: Date.now() };
+        uploads.set(u.id, u);
+        last = u;
+      }
+      DB.put('uploads', u).catch(() => toast('El archivo es muy pesado para guardarlo en el navegador, pero puedes usarlo ahora'));
+    } catch (e) {
+      toast(isVid ? `No se pudo abrir ${f.name}. Si es un MOV de iPhone (HEVC), expórtalo como MP4 H.264.` : `No se pudo leer ${f.name}`);
+    }
   }
   $('#stFile').value = '';
-  state.drawer = 'uploads';
+  state.drawer = lastAudio && !last ? 'audio' : 'uploads';
+  if (lastAudio) {
+    const s = soundOf(dsg());
+    if (!s.music) { dsg().sound = { ...s, music: lastAudio.id }; getMusic(lastAudio.id).catch(() => {}); commit(); toast('Música agregada al video'); }
+  }
   renderDrawer();
   if (last) useUpload(last.id, dropPoint);
 }
 function useUpload(id, point) {
   const u = uploads.get(id);
   if (!u) return;
-  const el = selEl();
+  if (u.kind === 'audio') { dsg().sound = { ...soundOf(dsg()), music: id }; getMusic(id).catch(() => {}); commit(); state.drawer = 'audio'; renderDrawer(); return; }
+  const isVid = u.kind === 'video';
+  let el = selEl();
   const d = dsg();
-  if (el && el.type === 'image') { el.src = 'up:' + id; commit(); renderStage(); renderCtx(); return; }
-  // ¿se soltó sobre un marco vacío?
-  if (point) {
-    const hit = hitTest(point);
-    if (hit && hit.type === 'image') { hit.src = 'up:' + id; commit(); select(hit.id); renderStage(); return; }
+  if (!el && point) { const hit = hitTest(point); if (hit && (hit.type === 'image' || hit.type === 'video')) el = hit; }
+  if (el && (el.type === 'image' || el.type === 'video')) {
+    // un marco seleccionado recibe la foto o el video
+    el.src = 'up:' + id;
+    if (isVid && el.type === 'image') { Object.assign(el, { type: 'video', start: 0, vol: 1, muted: false }); }
+    if (!isVid && el.type === 'video') { el.type = 'image'; }
+    if (isVid) fitPageToVideo(u);
+    commit(); select(el.id); renderStage(); renderCtx();
+    return;
   }
-  const k = Math.min(d.w * 0.7 / u.w, d.h * 0.6 / u.h);
-  const img = IMG({ src: 'up:' + id, w: u.w * k, h: u.h * k });
-  addEl(img);
+  const k = Math.min(d.w * (isVid ? 1 : 0.7) / u.w, d.h * (isVid ? 1 : 0.6) / u.h);
+  const ne = isVid ? VID({ src: 'up:' + id, w: u.w * k, h: u.h * k }) : IMG({ src: 'up:' + id, w: u.w * k, h: u.h * k });
+  if (isVid) {
+    // un video vertical en un diseño vertical va a sangre, detrás de todo
+    const same = Math.abs(u.w / u.h - d.w / d.h) < 0.12;
+    if (same) { ne.w = d.w; ne.h = d.h; ne.x = 0; ne.y = 0; pg().els.unshift(ne); fitPageToVideo(u); commit(); select(ne.id); renderStage(); return; }
+    fitPageToVideo(u);
+  }
+  addEl(ne);
+}
+function fitPageToVideo(u) {
+  const p = pg();
+  if (!u.dur || p.els.some(e => e.type === 'video' && e.src !== 'up:' + u.id)) return;
+  p.dur = +clamp(u.dur, 1, 180).toFixed(1);
+  renderPages();
+  toast(`La página dura lo mismo que tu video (${p.dur} s)`);
 }
 function onDrop(e) {
   e.preventDefault();
@@ -1708,7 +2485,7 @@ function onPointerMove(e) {
       fitText(el);
       nh = el.h;
     } else {
-      const keep = corner && (el.type === 'image' || el.type === 'logo' || e.shiftKey);
+      const keep = corner && (el.type === 'image' || el.type === 'video' || el.type === 'logo' || e.shiftKey);
       if (keep) { const s = Math.max(nw / o.w, nh / o.h); nw = o.w * s; nh = o.h * s; }
       nw = Math.max(8, nw);
       nh = el.type === 'shape' && el.shape === 'line' ? o.h : Math.max(8, nh);
@@ -1840,18 +2617,24 @@ function startPlay(range) {
   $('#stPlayBtn').innerHTML = icon('pause', 16);
   renderCtx();
   cancelAnimationFrame(playRaf);
+  const d = dsg();
+  const single = range && range.page != null ? range.page : null;
+  try { startSound(d, state.playT, single); } catch (e) { /* sin audio */ }
   const step = (ts) => {
     if (!state.playing) return;
     if (!playLast) playLast = ts;
     state.playT += (ts - playLast) / 1000;
     playLast = ts;
-    const end = playRange ? playRange.to : totalDur(dsg());
+    const end = playRange ? playRange.to : totalDur(d);
     if (state.playT >= end) {
       if (playRange) { stopPlay(); return; }
       state.playT = 0;
+      resetVideos(d);
+      try { startSound(d, 0, null); } catch (e) { /* sin audio */ }
     }
-    const pi = pageAt(dsg(), state.playT);
-    if (!playRange && pi !== state.page) { state.page = pi; $$('.st-page', root).forEach((n, i) => n.classList.toggle('is-active', i === pi)); }
+    syncVideos(d, state.playT, single);
+    const pi = single != null ? single : pageAt(d, state.playT);
+    if (single == null && pi !== state.page) { state.page = pi; $$('.st-page', root).forEach((n) => n.classList.toggle('is-active', +n.dataset.page === pi)); }
     renderStage();
     playRaf = requestAnimationFrame(step);
   };
@@ -1860,6 +2643,8 @@ function startPlay(range) {
 function stopPlay() {
   state.playing = false;
   cancelAnimationFrame(playRaf);
+  stopSound();
+  resetVideos(dsg());
   root.classList.remove('is-playing');
   $('#stPlayBtn').innerHTML = icon('play', 16);
   renderAll();
@@ -1892,7 +2677,8 @@ async function exportImage(type, pages) {
 
 function pickMime() {
   // H.264 Main 4.0: el nivel 3.0 (42E01E) no admite 1080×1920 y graba vacío.
-  const opts = ['video/mp4;codecs=avc1.4d0028', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+  const opts = ['video/mp4;codecs=avc1.4d0028,mp4a.40.2', 'video/mp4;codecs=avc1.4d0028,opus', 'video/mp4;codecs=avc1.4d0028', 'video/mp4',
+    'video/webm;codecs=vp9,opus', 'video/webm'];
   return opts.find(m => window.MediaRecorder && MediaRecorder.isTypeSupported(m)) || '';
 }
 async function exportVideo() {
@@ -1901,19 +2687,28 @@ async function exportVideo() {
   if (state.playing) stopPlay();
   await document.fonts.ready;
   const total = totalDur(d);
+  const s = soundOf(d);
+  if (s.music) { try { await getMusic(s.music); } catch (e) { /* sin música */ } }
   const modal = $('#stModal');
   modal.hidden = false;
-  modal.innerHTML = `<div class="st-modal-card"><h3>Creando tu video</h3><p>Se graba en tiempo real (${total.toFixed(0)} s). Deja esta pestaña abierta y visible.</p><div class="st-progress"><span id="stProg"></span></div><button class="st-btn st-btn-ghost" id="stCancelVid">Cancelar</button></div>`;
+  modal.innerHTML = `<div class="st-modal-card"><h3>Creando tu video</h3><p>Se graba en tiempo real (${total.toFixed(0)} s) con su audio. Deja esta pestaña abierta y visible.</p><div class="st-progress"><span id="stProg"></span></div><button class="st-btn st-btn-ghost" id="stCancelVid">Cancelar</button></div>`;
   const c = document.createElement('canvas');
   c.width = d.w; c.height = d.h;
   c.className = 'st-rec-canvas';
   document.body.appendChild(c);
   const x = c.getContext('2d');
+  resetVideos(d);
   drawAt(x, d, 0);
+  // video del lienzo + audio de la mezcla (efectos, música y sonido de los videos)
+  ensureAudio();
+  d.pages.forEach(p => p.els.forEach(el => { if (el.type === 'video') { const vc = videoFor(el); if (vc) connectVideo(vc); } }));
+  const recDest = ac.createMediaStreamDestination();
+  master.connect(recDest);
   const mime = pickMime();
-  const stream = c.captureStream(30);
+  const canvasStream = c.captureStream(30);
+  const stream = new MediaStream([...canvasStream.getVideoTracks(), ...recDest.stream.getAudioTracks()]);
   let cancelled = false;
-  const finish = () => { c.remove(); modal.hidden = true; };
+  const finish = () => { c.remove(); modal.hidden = true; try { master.disconnect(recDest); } catch (e) { /* ya desconectado */ } stopSound(); resetVideos(d); };
   $('#stCancelVid').onclick = () => { cancelled = true; };
   // calentamiento del codificador (tarda ~1,5 s en arrancar y se comería el inicio)
   const warm = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
@@ -1921,7 +2716,7 @@ async function exportVideo() {
   for (let i = 0; i < 50 && !cancelled; i++) { drawAt(x, d, 0); await new Promise(r => setTimeout(r, 33)); }
   warm.stop();
   if (cancelled) { finish(); return; }
-  const rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 14_000_000 } : undefined);
+  const rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 14_000_000, audioBitsPerSecond: 192_000 } : undefined);
   const chunks = [];
   rec.ondataavailable = (ev) => { if (ev.data.size) chunks.push(ev.data); };
   rec.onstop = () => {
@@ -1935,9 +2730,11 @@ async function exportVideo() {
   };
   rec.start(250);
   const t0 = performance.now();
+  startSound(d, 0, null);
   const tick = () => {
     const T = (performance.now() - t0) / 1000;
-    if (cancelled || T >= total) { drawAt(x, d, total); setTimeout(() => rec.stop(), 120); return; }
+    if (cancelled || T >= total) { drawAt(x, d, total); setTimeout(() => rec.stop(), 150); return; }
+    syncVideos(d, T, null);
     drawAt(x, d, T);
     const pr = $('#stProg');
     if (pr) pr.style.width = `${(T / total) * 100}%`;
@@ -1956,6 +2753,10 @@ async function refreshDesigns() {
 }
 function openDesign(d, isNew) {
   if (state.playing) stopPlay();
+  vidCache.forEach(c => c.v.pause());
+  vidCache.clear();
+  const mus = d.sound && d.sound.music;
+  if (mus) getMusic(mus).catch(() => {});
   refitDesign(d);
   state.design = d;
   state.page = 0; state.sel = null; state.right = null;
