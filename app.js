@@ -1,61 +1,81 @@
-// KRONOS / ARCH·TECH BRAND SYSTEM ENGINE
+// ALEJANDRA TORRES | BRAND & CREATIVE ENGINE
 
-// Default Initial Content Calendar Data (Pre-populated for Arch & Tech B2B)
+// Default Initial Content Calendar Data (Architecture, Tech & Lifestyle)
 const DEFAULT_POSTS = [
   {
     id: 1,
-    title: "El error de los $20,000 en obra",
-    format: "Reel",
-    pillar: "Enemigo Común / Disruptivo",
-    date: "2026-11-25",
+    title: "Un día conmigo diseñando un ático de lujo con IA",
+    format: "Lifestyle",
+    pillar: "Lifestyle & Rutina",
+    date: "2026-11-24",
     status: "Listo para Grabar",
-    hook: "¿Sabías que el 80% de los sobrecostes ocurren frente a una pantalla?",
-    cta: "Escribe PROYECTO por DM",
-    notes: "Grabar en el estudio con software 3D visible de fondo."
+    hook: "Así se proyecta una residencia de $1.5M antes de que exista el primer plano.",
+    cta: "Comenta 'ÁTICO' si quieres ver el render final",
+    notes: "Tomas: café matutino → pantalla con iPad y software 3D → resultado en obra."
   },
   {
     id: 2,
-    title: "Por qué los planos 2D están quebrando constructoras",
-    format: "Carrusel",
-    pillar: "Educación & Contraste",
-    date: "2026-11-28",
+    title: "El error de los $20,000 en obra",
+    format: "Reel",
+    pillar: "Enemigo Común / Disruptivo",
+    date: "2026-11-26",
     status: "Guion Listo",
-    hook: "La comparativa que ningún director de obra quiere ver.",
-    cta: "Guarda este post para tu próxima junta de obra",
-    notes: "Usar la plantilla de 5 slides con render isométrico."
+    hook: "¿Sabías que el 80% de los sobrecostes ocurren frente a una pantalla?",
+    cta: "Escribe PROYECTO por DM para auditar tu diseño",
+    notes: "Grabar en el estudio con software 3D visible de fondo."
   },
   {
     id: 3,
-    title: "Cómo la visualización 4K redujo 3 semanas de preventa",
-    format: "LinkedIn",
-    pillar: "Autoridad / Caso de Estudio",
-    date: "2026-12-02",
+    title: "Qué llevo en mi bolso de arquitecta para reunión de $1M",
+    format: "Lifestyle",
+    pillar: "Lifestyle & Rutina",
+    date: "2026-11-28",
     status: "Idea",
-    hook: "Caso real: de maqueta digital a cierre de inversión en tiempo récord.",
-    cta: "Conectemos por mensaje si estás desarrollando un proyecto similar.",
-    notes: "Orientado a directores inmobiliarios."
+    hook: "Las 4 herramientas indispensables que nunca dejo en mi estudio.",
+    cta: "¿Cuál de estos objetos crees que es el más caro?",
+    notes: "Planos cenitales de iPad, libreta Moleskine, medidor láser y gafas."
   },
   {
     id: 4,
-    title: "El detrás de escena: Detectando choques entre tuberías y vigas",
-    format: "Reel",
+    title: "Por qué los planos 2D están quebrando constructoras",
+    format: "Carrusel",
     pillar: "Proceso & Técnica",
-    date: "2026-12-05",
+    date: "2026-12-01",
+    status: "Guion Listo",
+    hook: "La comparativa técnica que ningún director de obra quiere ver.",
+    cta: "Guarda este post para tu próxima junta de obra",
+    notes: "Diseñar con la plantilla 'vs' en Canva Studio."
+  },
+  {
+    id: 5,
+    title: "3 detalles de hoteles de lujo para aplicar en arquitectura",
+    format: "Lifestyle",
+    pillar: "Lifestyle & Rutina",
+    date: "2026-12-04",
     status: "Idea",
-    hook: "Miren lo que pasa cuando abrimos este plano en el software...",
-    cta: "¿Tu estudio hace clash detection antes de construir?",
-    notes: "Grabar pantalla con zoom dinámico a las colisiones."
+    hook: "Iluminación oculta, zócalos invertidos y puertas ras de techo.",
+    cta: "Guarda este video de inspiración",
+    notes: "Tomas en un hotel o espacio con arquitectura escultural."
   }
 ];
 
 // State Management
-let posts = JSON.parse(localStorage.getItem('arch_tech_posts')) || DEFAULT_POSTS;
+let posts = JSON.parse(localStorage.getItem('aleja_brand_posts')) || DEFAULT_POSTS;
 let activeFilter = 'all';
+
+// Canva Studio State
+let canvasConfig = {
+  bg: '#0c0d10',
+  accent: '#00B7CB',
+  pattern: 'dots',
+  uploadedImage: null
+};
 
 // DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
   renderContentTable();
   updateOutreach();
+  initCanvasStudio();
   
   // Hash navigation check
   const hash = window.location.hash.replace('#', '');
@@ -66,17 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Navigation Engine
 function navigate(sectionId) {
-  // Hide all sections
   const sections = document.querySelectorAll('.content-section');
   sections.forEach(sec => sec.style.display = 'none');
 
-  // Show target section
   const target = document.getElementById(`sec-${sectionId}`);
   if (target) {
     target.style.display = 'block';
   } else {
-    document.getElementById('sec-overview').style.display = 'block';
-    sectionId = 'overview';
+    document.getElementById('sec-animaciones').style.display = 'block';
+    sectionId = 'animaciones';
   }
 
   // Update nav items
@@ -89,19 +107,16 @@ function navigate(sectionId) {
 
   // Update breadcrumb
   const nameMap = {
-    overview: 'Resumen Ejecutivo',
+    animaciones: 'Editor de Animaciones (Tipo Canva)',
+    lifestyle: 'Universo Lifestyle & Estética',
     calendar: 'Parrilla de Contenido',
+    studio: 'Canva Studio (Editor Gráfico 1080x1350)',
+    scripts: 'Teleprompter & Guiones',
     concept: 'Propósito y Concepto',
     enemy: 'Enemigo Común',
-    audience: 'Cliente Ideal B2B',
     colors: 'Colores & Tokens',
-    typography: 'Tipografía & Jerarquía',
-    logo: 'Monograma & Retícula',
     photography: 'Fotografía & Arte',
-    tone: 'Voz & Tono',
-    scripts: 'Teleprompter & Guiones',
-    carousel: 'Simulador de Carruseles',
-    outreach: 'Plantillas de Outreach'
+    outreach: 'Plantillas de Outreach B2B'
   };
 
   const currentLabel = document.getElementById('currentSectionName');
@@ -109,61 +124,336 @@ function navigate(sectionId) {
     currentLabel.textContent = nameMap[sectionId];
   }
 
+  // Re-render canvas if switching to studio
+  if (sectionId === 'studio') {
+    setTimeout(renderCanvas, 100);
+  }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Carousel Slide Switcher
-function switchSlide(slideNum) {
-  // Update tabs
-  document.querySelectorAll('.c-tab').forEach((tab, index) => {
-    tab.classList.toggle('active', index + 1 === slideNum);
-  });
+// IFRAME PRESET SWITCHER
+function setIframeSource(url) {
+  const iframe = document.getElementById('animacionesIframe');
+  const display = document.getElementById('frameUrlDisplay');
+  const extLink = document.getElementById('frameExternalLink');
 
-  // Update slide display
-  for (let i = 1; i <= 5; i++) {
-    const el = document.getElementById(`slide${i}`);
-    if (el) {
-      el.style.display = (i === slideNum) ? 'flex' : 'none';
+  if (iframe) iframe.src = url;
+  if (display) display.textContent = url;
+  if (extLink) extLink.href = url;
+
+  showToast('Cargando vista previa en el estudio...');
+}
+
+// LIFESTYLE QUICK ADD TO CALENDAR
+function addLifestyleIdeaToCalendar(title) {
+  const newPost = {
+    id: Date.now(),
+    title: title,
+    format: "Lifestyle",
+    pillar: "Lifestyle & Rutina",
+    date: new Date().toISOString().split('T')[0],
+    status: "Idea",
+    hook: "Toma cinematográfica inicial estética.",
+    cta: "Guarda este post o comenta por DM"
+  };
+
+  posts.unshift(newPost);
+  savePosts();
+  renderContentTable();
+  navigate('calendar');
+  showToast(`¡Agregado a tu parrilla: "${title.substring(0, 30)}..."!`);
+}
+
+// ==========================================
+// CANVA STUDIO ENGINE (HTML5 CANVAS 1080x1350)
+// ==========================================
+function initCanvasStudio() {
+  renderCanvas();
+}
+
+function switchStudioTab(tabId) {
+  document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.studio-panel-content').forEach(p => p.style.display = 'none');
+
+  const panel = document.getElementById(`stab-${tabId}`);
+  if (panel) panel.style.display = 'block';
+
+  event.target.classList.add('active');
+}
+
+function setCanvasBg(color) {
+  canvasConfig.bg = color;
+  renderCanvas();
+}
+
+function setCanvasAccent(color) {
+  canvasConfig.accent = color;
+  renderCanvas();
+}
+
+function handleImageUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const img = new Image();
+    img.onload = () => {
+      canvasConfig.uploadedImage = img;
+      renderCanvas();
+      showToast('Imagen cargada al lienzo');
+    };
+    img.src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearUploadedImage() {
+  canvasConfig.uploadedImage = null;
+  document.getElementById('imageUploader').value = '';
+  renderCanvas();
+  showToast('Imagen quitada');
+}
+
+function loadTemplate(tplName) {
+  const kicker = document.getElementById('canvasKicker');
+  const title = document.getElementById('canvasTitle');
+  const sub = document.getElementById('canvasSubtitle');
+  const cta = document.getElementById('canvasCta');
+
+  if (tplName === 'lifestyle') {
+    canvasConfig.bg = '#0e1014';
+    canvasConfig.accent = '#E5A962';
+    if (kicker) kicker.value = "ALEJANDRA TORRES • ARCHITECTURAL LIFESTYLE";
+    if (title) title.value = "The Architecture of Living Well: 3 Reglas de Oro.";
+    if (sub) sub.value = "El verdadero lujo no es recargar los espacios; es dominar la luz natural, la acústica y la nobleza de los materiales.";
+    if (cta) cta.value = "Desliza para ver la guía completa →";
+  } else if (tplName === 'hook') {
+    canvasConfig.bg = '#0c0d10';
+    canvasConfig.accent = '#00B7CB';
+    if (kicker) kicker.value = "ARQUITECTURA & TECNOLOGÍA B2B";
+    if (title) title.value = "El 80% de los sobrecostes ocurren por planos 2D desconectados.";
+    if (sub) sub.value = "Cuando las instalaciones chocan con una viga en obra, demoler cuesta miles de dólares. La coordinación digital lo resuelve en minutos.";
+    if (cta) cta.value = "Comenta 'PROYECTO' para auditar tu caso →";
+  } else if (tplName === 'vs') {
+    canvasConfig.bg = '#111318';
+    canvasConfig.accent = '#0066FF';
+    if (kicker) kicker.value = "LA COMPARATIVA TÉCNICA";
+    if (title) title.value = "Planos 2D Tradicionales vs. Simulación Digital BIM.";
+    if (sub) sub.value = "Los estudios que siguen proyectando en papel asumen un 18% de sobrecostes como normales. La tecnología los erradica.";
+    if (cta) cta.value = "Guarda esta comparativa para tu equipo →";
+  } else if (tplName === 'clash') {
+    canvasConfig.bg = '#08090b';
+    canvasConfig.accent = '#FF3344';
+    if (kicker) kicker.value = "DETECCIÓN PREVENTIVA EN OBRA";
+    if (title) title.value = "Clash Detection: Anticipando el desastre antes de construir.";
+    if (sub) sub.value = "Así es como encontramos 47 interferencias mecánicas en un edificio de 12 plantas antes de verter el primer metro de hormigón.";
+    if (cta) cta.value = "Escribe 'CLASH' por mensaje directo →";
+  } else if (tplName === 'cta') {
+    canvasConfig.bg = '#0e121a';
+    canvasConfig.accent = '#00B7CB';
+    if (kicker) kicker.value = "COLABORACIONES & FIRMAS";
+    if (title) title.value = "¿Diriges un Estudio de Arquitectura o Constructora?";
+    if (sub) sub.value = "Ayudo a despachos a cerrar ventas inmobiliarias más rápido y eliminar errores de obra con visualización 4K y coordinación digital.";
+    if (cta) cta.value = "Envía un DM con la palabra 'PROYECTO' →";
+  }
+
+  renderCanvas();
+  showToast(`Plantilla "${tplName.toUpperCase()}" cargada`);
+}
+
+function renderCanvas() {
+  const canvas = document.getElementById('mainCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+
+  // Background Fill
+  ctx.fillStyle = canvasConfig.bg;
+  ctx.fillRect(0, 0, width, height);
+
+  // Background Pattern (Dots or Grid)
+  const patternType = document.getElementById('canvasBgPattern')?.value || 'dots';
+  if (patternType === 'dots') {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+    const spacing = 36;
+    for (let x = 20; x < width; x += spacing) {
+      for (let y = 20; y < height; y += spacing) {
+        ctx.beginPath();
+        ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  } else if (patternType === 'grid') {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    const spacing = 48;
+    for (let x = 0; x < width; x += spacing) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+    for (let y = 0; y < height; y += spacing) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+  } else if (patternType === 'gradient') {
+    const grad = ctx.createRadialGradient(width / 2, 200, 20, width / 2, 200, 600);
+    grad.addColorStop(0, canvasConfig.accent + '33');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  // Draw Uploaded Image if exists
+  if (canvasConfig.uploadedImage) {
+    ctx.save();
+    ctx.globalAlpha = 0.45;
+    // Cover fill in center
+    const img = canvasConfig.uploadedImage;
+    const scale = Math.max(width / img.width, height / img.height);
+    const x = (width / 2) - (img.width / 2) * scale;
+    const y = (height / 2) - (img.height / 2) * scale;
+    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+    ctx.restore();
+  }
+
+  // Outer Border Frame
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(40, 40, width - 80, height - 80);
+
+  // Kicker Tag
+  const kicker = document.getElementById('canvasKicker')?.value || 'ALEJANDRA TORRES';
+  ctx.font = '700 24px "Space Grotesk", sans-serif';
+  ctx.fillStyle = canvasConfig.accent;
+  ctx.letterSpacing = '3px';
+  ctx.fillText(kicker.toUpperCase(), 90, 130);
+
+  // Accent Line under Kicker
+  ctx.fillStyle = canvasConfig.accent;
+  ctx.fillRect(90, 150, 60, 4);
+
+  // Main Title
+  const title = document.getElementById('canvasTitle')?.value || 'Título Principal';
+  ctx.font = '800 64px "Space Grotesk", sans-serif';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.letterSpacing = '-1px';
+  wrapText(ctx, title, 90, 260, width - 180, 78);
+
+  // Graphic Element (Isometric Wireframe or Accent Box)
+  const graphicType = document.getElementById('canvasGraphic')?.value || 'prism';
+  if (graphicType === 'prism') {
+    ctx.save();
+    ctx.translate(width / 2, 700);
+    ctx.strokeStyle = canvasConfig.accent;
+    ctx.lineWidth = 3;
+    
+    // Isometric Cube
+    ctx.beginPath();
+    ctx.moveTo(0, -90);
+    ctx.lineTo(80, -45);
+    ctx.lineTo(80, 50);
+    ctx.lineTo(0, 95);
+    ctx.lineTo(-80, 50);
+    ctx.lineTo(-80, -45);
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, 95);
+    ctx.moveTo(0, 0);
+    ctx.lineTo(80, -45);
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-80, -45);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Subtitle / Paragraph
+  const subtitle = document.getElementById('canvasSubtitle')?.value || '';
+  ctx.font = '400 32px "Plus Jakarta Sans", sans-serif';
+  ctx.fillStyle = '#A0AEC0';
+  ctx.letterSpacing = '0px';
+  wrapText(ctx, subtitle, 90, 920, width - 180, 48);
+
+  // Bottom CTA Pill
+  const cta = document.getElementById('canvasCta')?.value || 'Desliza para ver más →';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.beginPath();
+  roundRect(ctx, 90, 1140, width - 180, 70, 35);
+  ctx.fill();
+  ctx.strokeStyle = canvasConfig.accent;
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.font = '700 26px "Space Grotesk", sans-serif';
+  ctx.fillStyle = canvasConfig.accent;
+  ctx.textAlign = 'center';
+  ctx.fillText(cta, width / 2, 1184);
+  ctx.textAlign = 'left';
+
+  // Bottom Author Watermark
+  const author = document.getElementById('canvasAuthor')?.value || '@alejandratorres';
+  ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.fillText(author, 90, 1260);
+}
+
+// Canvas Helpers
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  let curY = y;
+
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' ';
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      ctx.fillText(line, x, curY);
+      line = words[n] + ' ';
+      curY += lineHeight;
+    } else {
+      line = testLine;
     }
   }
+  ctx.fillText(line, x, curY);
 }
 
-// Token Copy with Toast
-function copyToken(value) {
-  navigator.clipboard.writeText(value).then(() => {
-    showToast(`Token copiado: ${value}`);
-  });
+function roundRect(ctx, x, y, width, height, radius) {
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
 }
 
-function copyText(elementId) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-  const text = el.innerText || el.textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('Copiado al portapapeles con éxito');
-  });
+function downloadCanvasImage() {
+  const canvas = document.getElementById('mainCanvas');
+  if (!canvas) return;
+
+  const link = document.createElement('a');
+  link.download = `alejandra-torres-post-${Date.now()}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('¡Imagen PNG (1080x1350) descargada con éxito!');
 }
 
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 2500);
-}
-
-// Outreach Template Generator
-function updateOutreach() {
-  const leadName = document.getElementById('leadName')?.value || '[Nombre]';
-  const firmName = document.getElementById('firmName')?.value || '[Estudio]';
-
-  document.querySelectorAll('.lead-var').forEach(el => el.textContent = leadName);
-  document.querySelectorAll('.firm-var').forEach(el => el.textContent = firmName);
-}
-
+// ==========================================
 // CONTENT CALENDAR (PARRILLA) MANAGEMENT
+// ==========================================
 function renderContentTable() {
   const tbody = document.getElementById('contentTableBody');
   if (!tbody) return;
@@ -182,7 +472,13 @@ function renderContentTable() {
   filtered.forEach(post => {
     const tr = document.createElement('tr');
 
-    const badgeClass = post.format === 'Reel' ? 'badge-reel' : post.format === 'Carrusel' ? 'badge-carrusel' : 'badge-linkedin';
+    const badgeClass = post.format === 'Reel' 
+      ? 'badge-reel' 
+      : post.format === 'Carrusel' 
+      ? 'badge-carrusel' 
+      : post.format === 'Lifestyle'
+      ? 'badge-lifestyle'
+      : 'badge-linkedin';
 
     tr.innerHTML = `
       <td><strong>${post.title}</strong><br><small style="color: var(--text-dim);">${post.hook || ''}</small></td>
@@ -272,21 +568,41 @@ function handleAddPost(event) {
 }
 
 function savePosts() {
-  localStorage.setItem('arch_tech_posts', JSON.stringify(posts));
+  localStorage.setItem('aleja_brand_posts', JSON.stringify(posts));
 }
 
-// Search Filter across platform
-function handleSearch(query) {
-  const q = query.toLowerCase().trim();
-  if (!q) return;
+// Toast
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
 
-  const cards = document.querySelectorAll('.card, .stat-card, .service-box');
-  cards.forEach(card => {
-    const text = card.textContent.toLowerCase();
-    if (text.includes(q)) {
-      card.style.outline = '2px solid var(--color-brand)';
-    } else {
-      card.style.outline = 'none';
-    }
+// Copy Token / Text
+function copyToken(value) {
+  navigator.clipboard.writeText(value).then(() => {
+    showToast(`Token copiado: ${value}`);
   });
+}
+
+function copyText(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copiado al portapapeles con éxito');
+  });
+}
+
+// Outreach Template Generator
+function updateOutreach() {
+  const leadName = document.getElementById('leadName')?.value || '[Nombre]';
+  const firmName = document.getElementById('firmName')?.value || '[Estudio]';
+
+  document.querySelectorAll('.lead-var').forEach(el => el.textContent = leadName);
+  document.querySelectorAll('.firm-var').forEach(el => el.textContent = firmName);
 }
