@@ -1442,3 +1442,118 @@ body {
   .top-bar { padding: 0 20px; }
   .content-body { padding: 20px; }
 }
+
+/* ===== STUDIO: MODO VIDEO PROMO 9:16 ===== */
+.studio-mode-switch {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+}
+.mode-btn {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font: 600 0.85rem var(--font-body);
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.mode-btn:hover { color: var(--text-main); }
+.mode-btn.active { background: var(--color-turquesa); color: #04181b; }
+.studio-post-actions { display: flex; justify-content: flex-end; margin-bottom: 18px; }
+
+.video-wrapper { max-width: 380px; aspect-ratio: 9 / 16; }
+.video-toolbar { max-width: 380px; }
+.v-time { font-family: var(--font-mono); color: var(--text-main); }
+.v-controls, .v-scene-chips, .v-export, .v-note {
+  width: 100%;
+  max-width: 380px;
+}
+.v-controls { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.v-controls .btn-glass { white-space: nowrap; min-width: 128px; justify-content: center; }
+#promoScrub { flex: 1; accent-color: var(--color-turquesa); }
+.v-scene-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.v-scene-chip {
+  flex: 1;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  color: var(--text-muted);
+  font: 600 0.72rem var(--font-body);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.v-scene-chip:hover { color: var(--text-main); border-color: var(--border-strong); }
+.v-scene-chip.active { border-color: var(--color-turquesa); color: var(--color-turquesa); }
+.v-export { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.v-export .btn-primary { flex: 1; justify-content: center; }
+.v-export .btn-primary:disabled { opacity: 0.75; cursor: progress; background: var(--color-red); }
+.v-help { font-size: 0.78rem; color: var(--text-muted); margin: 8px 0 12px; line-height: 1.5; }
+.v-note { margin-top: 10px; }
+
+.video-panel-content { max-height: 68vh; overflow-y: auto; padding-right: 4px; }
+.v-scene {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-elevated);
+  margin-bottom: 10px;
+}
+.v-scene summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+.v-scene summary::-webkit-details-marker { display: none; }
+.v-scene[open] summary { border-bottom: 1px solid var(--border-subtle); color: var(--color-turquesa); }
+.v-dur { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+.v-dur input {
+  width: 54px;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-main);
+  padding: 4px 6px;
+  font-size: 0.8rem;
+}
+.v-fields { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 12px; }
+.v-fields .form-group { margin: 0; }
+.v-fields textarea { resize: vertical; font-family: var(--font-body); }
+.v-msg {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 6px;
+  padding: 10px;
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+.v-msg textarea { grid-column: 1 / -1; }
+.v-msg input, .v-msg select, .v-msg textarea {
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-main);
+  padding: 7px 9px;
+  font: 0.82rem var(--font-body);
+  min-width: 0;
+}
+.v-msg .v-ico { width: 52px; text-align: center; }
+.v-x {
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 6px;
+  width: 32px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+.v-x:hover { color: var(--color-red); border-color: var(--color-red); }
+#promoAccentPicker { height: 42px; padding: 4px; cursor: pointer; }

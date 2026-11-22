@@ -110,7 +110,7 @@ function navigate(sectionId) {
     animaciones: 'Editor de Animaciones (Tipo Canva)',
     lifestyle: 'Universo Lifestyle & Estética',
     calendar: 'Parrilla de Contenido',
-    studio: 'Canva Studio (Editor Gráfico 1080x1350)',
+    studio: 'Studio · Video promo y posts',
     scripts: 'Teleprompter & Guiones',
     concept: 'Propósito y Concepto',
     enemy: 'Enemigo Común',
@@ -126,6 +126,9 @@ function navigate(sectionId) {
 
   if (sectionId === 'studio') {
     setTimeout(renderCanvas, 100);
+    if (typeof renderPromo === 'function') setTimeout(renderPromo, 100);
+  } else if (typeof togglePromoPlay === 'function' && !vRecording) {
+    togglePromoPlay(false);
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
